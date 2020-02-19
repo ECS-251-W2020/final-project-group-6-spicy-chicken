@@ -12,7 +12,7 @@
 
 ### Week 3 Proposed:
 * Finish up the ethereum blockchain and smart contract.
-* First application implementation.
+* First mobile applicatio  implementation.
 * Do end to end, basic testing.
 * Add ability for multiple accounts.
 * Research into 2nd application - file sharing
