@@ -33,17 +33,16 @@ sudo usermod -aG docker $USER
 sudo curl -L "https://github.com/docker/compose/releases/download/1.25.3/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
 sudo chmod +x /usr/local/bin/docker-compose
 
-<<<<<<< HEAD
 # install node and npm
 curl -sL https://deb.nodesource.com/setup_10.x | sudo -E bash -
 sudo apt-get install -y nodejs
 
 # install solc
 sudo npm install -g solc
-=======
+
 # Auto complete for docker
 sudo curl -L https://raw.githubusercontent.com/docker/compose/1.25.3/contrib/completion/bash/docker-compose -o /etc/bash_completion.d/docker-compose
 
 # Add helper aliases
-cat ./bash_aliases
+cat ./bash_aliases >> ~/.bashrc
 
