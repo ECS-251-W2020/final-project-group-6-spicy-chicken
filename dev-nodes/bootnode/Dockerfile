@@ -7,13 +7,11 @@ RUN apt-get update \
 WORKDIR "/root"
 
 RUN add-apt-repository -y ppa:ethereum/ethereum
-
-ARG binary
 RUN apt-get update \
      && apt-get install -y ethereum
 
 ENV nodekeyhex=""
-CMD exec bootnode -nodekeyhex $nodekeyhex
+CMD exec bootnode -nodekeyhex $nodekeyhex -verbosity 9 -addr :30301
 
 EXPOSE 30301/udp
 EXPOSE 30303/udp

@@ -1,21 +1,23 @@
 version: "3"
 services:
-  spck-bootnode:
-    hostname: spck-bootnode
+  bootnode:
+    hostname: bootnode
+    container_name: bootnode
     environment:
       - nodekeyhex=08f0e1dee5c1b4645f3331a566009e41a4514b6cd28656d63d0449ecf812812b #Needs to be fix, so that the miners know the resulting enode id
     build:
       context: ./bootnode
     ports:
       - 30301:30301/udp
+      - 30303:30303/udp
     networks:
       chainnet:
         ipv4_address: 172.25.0.101 # The miners need to know the IP address later on
 
-  spck-dev-miner-1:
-    hostname: spck-dev-miner-1
+  miner-1:
+    hostname: miner-1
     depends_on:
-      - spck-bootnode
+      - bootnode
     environment:
       - address=0x8cc5a1a0802db41db826c2fcb72423744338dcb0 #derived from the private key which is passed in the args
       - bootnodeId=76a8171707eca17647a47ca99ffd348927dfa60102792ea349a25d5192e61855be83b786e376276a306afcceea4ffd1c9c77e4370b417efc39f328a0d068004c #derived from the nodekeyhex of the bootnode
@@ -25,17 +27,19 @@ services:
       args:
         privatekey: df504d175ae63abf209bad9dda965310d99559620550e74521a6798a41215f46 # Please don't do something like this in production, okay?
         password: pass
-    container_name: spck-miner-1
+    container_name: miner-1
+    ports:
+      - 8545:8545
     volumes:
       - eth-data-1:/root/.ethash
     networks:
       chainnet:
         ipv4_address: 172.25.0.102 # The monitor needs to know this address
 
-  spck-dev-miner-2:
-    hostname: spck-dev-miner-2
+  miner-2:
+    hostname: miner-2
     depends_on:
-      - spck-bootnode
+      - bootnode
     environment:
       - address=0x3590aca93338b0721966a8d0c96ebf2c4c87c544 #derived from the private key which is passed in the args
       - bootnodeId=76a8171707eca17647a47ca99ffd348927dfa60102792ea349a25d5192e61855be83b786e376276a306afcceea4ffd1c9c77e4370b417efc39f328a0d068004c #derived from the nodekeyhex of the bootnode
@@ -45,17 +49,19 @@ services:
       args:
         privatekey: bc5b578e0dcb2dbf98dd6e5fe62cb5a28b84a55e15fc112d4ca88e1f62bd7c35
         password: word
-    container_name: spck-miner-2
+    container_name: miner-2
+    ports:
+      - 8546:8545
     volumes:
      - eth-data-2:/root/.ethash
     networks:
       chainnet:
         ipv4_address: 172.25.0.104
 
-  spck-dev-node:
-     hostname: spck-dev-node
+  devnode:
+     hostname: devnode
      depends_on:
-       - spck-dev-miner-2
+       - miner-2
      environment:
        - address=0x3590aca93338b0721966a8d0c96ebf2c4c87c544 #derived from the private key which is passed in the args
        - bootnodeId=76a8171707eca17647a47ca99ffd348927dfa60102792ea349a25d5192e61855be83b786e376276a306afcceea4ffd1c9c77e4370b417efc39f328a0d068004c #derived from the nodekeyhex of the bootnode
@@ -65,9 +71,9 @@ services:
        args:
          privatekey: bc5b578e0dcb2dbf98dd6e5fe62cb5a28b84a55e15fc112d4ca88e1f62bd7c35
          password: word
-     container_name: spck-node
+     container_name: devnode
      ports:
-       - 8545:8545
+       - 8547:8545
      healthcheck:
        test: wget http://localhost:8545
        interval: 2s

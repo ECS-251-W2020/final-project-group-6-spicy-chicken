@@ -10,7 +10,7 @@ RUN add-apt-repository -y ppa:ethereum/ethereum
 
 ARG binary
 RUN apt-get update \
-     && apt-get install -y ethereum
+     && apt-get install -y ethereum net-tools netcat
 
 ARG password
 ARG privatekey

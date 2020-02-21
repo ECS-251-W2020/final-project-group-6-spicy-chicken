@@ -1,0 +1,13 @@
+#!/bin/bash
+
+# docker helpers to clean things
+alias rm_all_dock_images='docker rmi -f $(docker images -a -q)'
+alias rm_all_dock_conts='docker rm -f $(docker ps -a -f status=exited -q)'
+
+# docker helpers to login to boxen
+alias login_dev='docker exec -it devnode /bin/bash'
+alias login_m1='docker exec -it miner-1 /bin/bash'
+alias login_m2='docker exec -it miner-2 /bin/bash'
+alias login_boot='docker exec -it bootnode /bin/bash'
+
+
