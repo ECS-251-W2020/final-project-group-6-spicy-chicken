@@ -8,7 +8,6 @@ WORKDIR "/root"
 
 RUN add-apt-repository -y ppa:ethereum/ethereum
 
-ARG binary
 RUN apt-get update \
      && apt-get install -y ethereum
 
@@ -24,7 +23,7 @@ ENV address=""
 ENV bootnodeId=""
 ENV bootnodeIp=""
 
-CMD exec geth --bootnodes "enode://$bootnodeId@$bootnodeIp:30301" --networkid "6660001" --verbosity=4 --rpc --rpcaddr "0.0.0.0" --rpcapi "eth,web3,net,admin,debug,db" --rpccorsdomain "*" --syncmode="full" --nousb
+CMD exec geth --bootnodes "enode://$bootnodeId@$bootnodeIp:30301" --networkid "1582098195" --verbosity=4 --rpc --rpcaddr "0.0.0.0" --rpcapi "eth,web3,net,admin,debug,db" --rpccorsdomain "*" --syncmode="full" --nousb
 
 EXPOSE 8545
 EXPOSE 30303
