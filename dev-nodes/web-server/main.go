@@ -28,6 +28,7 @@ type Incident struct {
 }
 
 const GEO_PREC = 8;
+var DB  = initDB();
 
 func Index(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
     fmt.Fprint(w, asciiChicken())
@@ -80,17 +81,21 @@ func reportAccident(w http.ResponseWriter, r *http.Request, params httprouter.Pa
 		Location: incidentLocation,
 		Verified: false,
 	}
+    addAlarm(DB, newIncident);
+
+    // Enter to Block chain
 
 	w.Header().Set("Content-Type", "application/json")
     fmt.Fprintf(w, "hello, %s!\n", params.ByName("name"))
 	printJsonResponse(w, r, newIncident)
+
 }
 
 func listAccident(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 
 	w.Header().Set("Content-Type", "application/json")
+	printJsonResponse(w, r, DB.Items())
 
-	printJsonResponse(w, r, "{ret: notYetImplelmented}")
 }
 
 // printers
@@ -129,5 +134,6 @@ func main() {
     router.POST("/report", reportAccident)
     router.GET("/list", listAccident)
 
+    fmt.Println("Starting webserver....")
     log.Fatal(http.ListenAndServe(":80", router))
 }
