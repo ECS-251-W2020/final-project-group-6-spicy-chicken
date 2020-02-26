@@ -4,7 +4,26 @@ import { ScrollView } from 'react-native-gesture-handler';
 import * as WebBrowser from 'expo-web-browser';
 
 import { MonoText } from '../components/StyledText';
-// import {Button} from "react-native-web";
+// import {Button} from "react-native-web";f
+//
+
+function doRequest(){
+var request = new XMLHttpRequest();
+	request.onreadystatechange = (e) => {
+		  if (request.readyState !== 4) {
+			      return;
+			    }
+
+		  if (request.status === 200) {
+			      console.log('success', request.responseText);
+			    } else {
+				        console.warn('error');
+				      }
+	};
+
+	request.open('POST', 'http://spicy-chicken.ddns.net/report');
+	request.send("accountId=11231&latitude=23.2232&longitude=23.232342");
+}
 
 export default function HomeScreen() {
   return (
@@ -29,7 +48,7 @@ export default function HomeScreen() {
         {/*  />*/}
         {/*</View>*/}
         <View>
-          <Button onPress={() => Alert.alert('I crashed')}
+          <Button onPress={() => doRequest()}
                   title='crash!'
                   color="#f194ff"/>
         </View>
