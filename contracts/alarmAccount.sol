@@ -24,11 +24,11 @@ contract AlarmAccount {
     }
     
     // create new alarm 
-    function alarm(string memory alarmString, uint timestamp, string memory lat, string memory long) public returns (int result) {
+    function alarm( uint timestamp, string memory latitude, string memory longitude) public {
         _alarms[_numberOfAlarms].timestamp = timestamp;
-        //_alarms[_numberOfAlarms].alarmString = alarmString;
-        _alarms[_numberOfAlarms].latitude = lat;
-        _alarms[_numberOfAlarms].longitude = long;
+        _alarms[_numberOfAlarms].accountId = msg.sender;
+        _alarms[_numberOfAlarms].latitude = latitude;
+        _alarms[_numberOfAlarms].longitude = longitude;
         _numberOfAlarms++;
     }
             
