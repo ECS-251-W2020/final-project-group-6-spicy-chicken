@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/usr/bin/env bash
 #
 # Runs a bootnode with ethereum official "alltools" image.
 #
