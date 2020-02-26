@@ -7,3 +7,6 @@ contracts/*.abi
 
 # app
 frontend/yarn.lock
+
+# webserver
+dev-nodes/web-server/web-server
