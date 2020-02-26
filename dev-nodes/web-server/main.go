@@ -30,6 +30,7 @@ type Incident struct {
 const GEO_PREC = 8;
 
 func Index(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
+    fmt.Fprint(w, asciiChicken())
     fmt.Fprint(w, "Welcome! But this is an API Server.\n")
 }
 
@@ -128,5 +129,5 @@ func main() {
     router.POST("/report", reportAccident)
     router.GET("/list", listAccident)
 
-    log.Fatal(http.ListenAndServe(":8080", router))
+    log.Fatal(http.ListenAndServe(":80", router))
 }
