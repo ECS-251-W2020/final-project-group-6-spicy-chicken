@@ -1,7 +1,7 @@
 all: app
 
 app:
-	solcjs --abi ./*sol && solcjs --bin ./*sol
+	solcjs --abi  --bin ./*sol
 clean:
 	-rm *.bin
 	-rm *.abi
