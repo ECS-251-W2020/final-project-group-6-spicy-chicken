@@ -87,14 +87,13 @@ func reportAccident(w http.ResponseWriter, r *http.Request, params httprouter.Pa
     fmt.Fprintf(w, "hello, %s!\n", params.ByName("name"))
 	printJsonResponse(w, r, newIncident)
 
-    printAll(DB);
 }
 
 func listAccident(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 
 	w.Header().Set("Content-Type", "application/json")
+	printJsonResponse(w, r, DB.Items())
 
-	printJsonResponse(w, r, "{ret: notYetImplelmented}")
 }
 
 // printers
