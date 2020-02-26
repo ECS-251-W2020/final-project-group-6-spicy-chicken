@@ -2,3 +2,5 @@
 *.sw?
 
 # dirs
+contracts/*.bin
+contracts/*.abi
