@@ -46,3 +46,9 @@ sudo curl -L https://raw.githubusercontent.com/docker/compose/1.25.3/contrib/com
 # Add helper aliases
 cat ./bash_aliases >> ~/.bashrc
 
+# install more stuff
+sudo apt-get install -y golang
+
+
+# config
+export GOPATH=$HOME/gocode
