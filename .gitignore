@@ -4,3 +4,6 @@
 # dirs
 contracts/*.bin
 contracts/*.abi
+
+# app
+frontend/yarn.lock
