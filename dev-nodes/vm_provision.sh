@@ -37,6 +37,10 @@ sudo chmod +x /usr/local/bin/docker-compose
 curl -sL https://deb.nodesource.com/setup_10.x | sudo -E bash -
 sudo apt-get install -y nodejs
 
+# install react-native deps
+sudo npm install -f -g yarn
+sudo npm install -g expo-cli
+
 # install solc
 sudo npm install -g solc
 
