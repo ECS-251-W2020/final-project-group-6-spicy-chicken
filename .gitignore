@@ -10,3 +10,12 @@ frontend/yarn.lock
 
 # webserver
 dev-nodes/web-server/web-server
+dev-nodes/bin/*noip-2.1.9-1
+dev-nodes/.bootnode/
+dev-nodes/.ethash/
+dev-nodes/.ether-m1/
+dev-nodes/.ether-m2/
+dev-nodes/.ether-m3/
+dev-nodes/.ether-n1/
+dev-nodes/genesis.json
+
