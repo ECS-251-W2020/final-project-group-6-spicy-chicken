@@ -10,3 +10,4 @@ frontend/yarn.lock
 
 # webserver
 dev-nodes/web-server/web-server
+dev-nodes/bin/*noip-2.1.9-1
