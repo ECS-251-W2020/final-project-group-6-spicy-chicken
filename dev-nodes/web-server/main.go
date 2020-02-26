@@ -83,6 +83,8 @@ func reportAccident(w http.ResponseWriter, r *http.Request, params httprouter.Pa
 	}
     addAlarm(DB, newIncident);
 
+    // Enter to Block chain
+
 	w.Header().Set("Content-Type", "application/json")
     fmt.Fprintf(w, "hello, %s!\n", params.ByName("name"))
 	printJsonResponse(w, r, newIncident)
