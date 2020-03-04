@@ -4,6 +4,7 @@ import (
     "log"
     "fmt"
     "strconv"
+    "strings"
 
     "net/http"
     "encoding/json"
@@ -32,8 +33,12 @@ var FSClient, FSCTX, err = initFireStoreClient();
 
 
 func Index(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
-    fmt.Fprint(w, asciiChicken())
-    fmt.Fprint(w, "Welcome! But this is an API Server.\n")
+    fmt.Println(r.URL.Path)
+    if strings.Contains(r.URL.Path, "png") {
+        http.ServeFile(w, r, "./rooster.png")
+    } else {
+        http.ServeFile(w, r, "./index.html")
+    }
 }
 
 func reportAccident(w http.ResponseWriter, r *http.Request, params httprouter.Params) {
@@ -141,6 +146,7 @@ func main() {
     router := httprouter.New()
 
     router.GET("/", Index)
+    router.GET("/rooster.png", Index)
     router.POST("/report", reportAccident)
     router.GET("/list", listAccident)
 
