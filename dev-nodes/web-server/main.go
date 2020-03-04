@@ -9,16 +9,23 @@ import (
     "encoding/json"
 
     "github.com/julienschmidt/httprouter"
+    "google.golang.org/genproto/googleapis/type/latlng"
 )
 
 type Incident struct {
-    AuthToken   string
     Latitude    float64
     Longitude   float64
-    Speed       int
-    Heading     int
-    Timestamp   float64
+    Speed       int         `firestore:"speed"`
+    Heading     int         `firestore:"heading"`
+    Timestamp   float64     `firestore:"timestamp"`
     Verified    bool
+}
+
+type FSIncident struct {
+    Location    *latlng.LatLng `firestore:Location`
+    Speed       int         `firestore:"speed"`
+    Heading     int         `firestore:"heading"`
+    Timestamp   float64     `firestore:"timestamp"`
 }
 
 var FSClient, FSCTX, err = initFireStoreClient();
@@ -40,6 +47,7 @@ func reportAccident(w http.ResponseWriter, r *http.Request, params httprouter.Pa
 
     // Bail if account not found. XXX Do something smarter here
     authToken := r.Form.Get("authToken")
+    _ = authToken
 
     lat, err:= strconv.ParseFloat(r.Form.Get("latitude"), 32);
     if err != nil {
@@ -71,10 +79,8 @@ func reportAccident(w http.ResponseWriter, r *http.Request, params httprouter.Pa
 
     }
 
-
     // Enter it into the backing store
     var newIncident = Incident{
-        AuthToken: authToken,
         Latitude: lat,
         Longitude: long,
         Timestamp: timestamp,
@@ -95,8 +101,11 @@ func reportAccident(w http.ResponseWriter, r *http.Request, params httprouter.Pa
 func listAccident(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 
     w.Header().Set("Content-Type", "application/json")
-    getAll(FSCTX, FSClient)
-    //printJsonResponse(w, r, FSClient.Items())
+    data, err := getAll(FSCTX, FSClient)
+    if err != nil {
+        printJsonError(w, r, 400, err.Error())
+    }
+    printJsonResponse(w, r, data)
 
 }
 

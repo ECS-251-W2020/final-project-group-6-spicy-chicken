@@ -3,6 +3,7 @@ package main
 import (
   "fmt"
   "log"
+
   "golang.org/x/net/context"
   //firebase "firebase.google.com/go"
   //  "firebase.google.com/go/auth"
@@ -31,9 +32,12 @@ func initFireStoreClient() (*firestore.Client, context.Context, error) {
     return client, ctx, err
 }
 
-
-func getAll(ctx context.Context, client *firestore.Client) error {
+func getAll(ctx context.Context, client *firestore.Client) ( []Incident, error) {
     fmt.Println("All cities:")
+
+    var incidents []Incident
+
+
     iter := client.Collection("accidents").Documents(ctx)
     for {
         doc, err := iter.Next()
@@ -41,11 +45,24 @@ func getAll(ctx context.Context, client *firestore.Client) error {
             break
         }
         if err != nil {
-            return err
+            return nil, err
         }
-        fmt.Println(doc.Data())
+
+        var newFSinc FSIncident
+        var newInc Incident
+        doc.DataTo(&newFSinc)
+
+        newInc.Latitude = newFSinc.Location.Latitude
+        newInc.Longitude = newFSinc.Location.Longitude
+        newInc.Speed = newFSinc.Speed
+        newInc.Heading = newFSinc.Heading
+        newInc.Timestamp = newFSinc.Timestamp
+        newInc.Verified = true
+
+        incidents = append(incidents, newInc)
     }
-    return nil
+
+   return incidents, err
 }
 
 func addOne(one Incident, ctx context.Context, client *firestore.Client) error {
