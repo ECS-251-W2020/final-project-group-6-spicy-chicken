@@ -1,6 +1,7 @@
 ## Week 4 (Feb 26 - Mar 4)
 
 ### What we did last week:
+* demo: http://spicy-chicken.ddns.net/
 * Met with team to discuss and divide the tasks, and working together to finish the tasks. 
 * Sample smart contract was deployed on the local blockchain. 
 * Implement the "push notification" functions for mobile app, blocked because need the iOS developer account. 
