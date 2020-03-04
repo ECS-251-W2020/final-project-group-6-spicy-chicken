@@ -6,7 +6,8 @@
 * Implement the "push notification" functions for mobile app, blocked because need the iOS developer account. 
 * Add log-in function, which can be logged in with google account.
 * Add google account authentication in mobile app. 
-* Add firebase to our system. 
+* Set up the web server and interact with mobile app. 
+* Figure out how to add the map interface in mobile app. 
 * Testing the REST API. 
 * Adding more documentation/guides about project to wiki.
 * Keep update the Trello board to track our task. [Trello Board](https://trello.com/b/ukfAJEwb/spicy-chicken)
