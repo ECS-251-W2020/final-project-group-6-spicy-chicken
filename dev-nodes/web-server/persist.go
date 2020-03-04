@@ -1,43 +1,77 @@
 package main
 
 import (
-    "fmt"
-    "time"
-    "strconv"
-    "github.com/patrickmn/go-cache"
+  "fmt"
+  "log"
+  "golang.org/x/net/context"
+  //firebase "firebase.google.com/go"
+  //  "firebase.google.com/go/auth"
+  "google.golang.org/api/option"
+  "cloud.google.com/go/firestore"
+  "google.golang.org/api/iterator"
 
+  "google.golang.org/genproto/googleapis/type/latlng"
 )
 
-func initDB() *cache.Cache {
-    return cache.New(24*time.Hour, 0*time.Hour);
-}
+func initFireStoreClient() (*firestore.Client, context.Context, error) {
+    projectID := "spicychicken-268718"
+    opt := option.WithCredentialsFile("spicychicken-268718-firebase-adminsdk-h1qb3-bd9c136e52.json")
 
-func addAlarm(db *cache.Cache, newIncident Incident){
+    //app, err := firebase.NewApp(context.Background(), nil, opt)
 
-    key := strconv.Itoa(newIncident.AccountId) + strconv.Itoa(int(time.Now().Unix()));
-    db.Set(key, newIncident, 0);
-    return;
-/*
-    fmt.Println("lksldjf")
-    fmt.Println(db)
-
-    n := len(db)
-    fmt.Println(db)
-
-    //db = db[0 : n+1]
-    db = append(db, newIncident);
-    //db[n-1] = newIncident
-*/
-}
-
-//func getAll(db *cache.Cache) {
-/*func getAll(db []Incident) []Incident{
-    return db
-}*/
-
-func printAll(db *cache.Cache) {
-
-    for i, s := range db.Items() {
-        fmt.Println(i, s)
+    // Get a Firestore client.
+    ctx := context.Background()
+    client, err := firestore.NewClient(ctx, projectID, opt)
+    if err != nil {
+            log.Fatalf("Failed to create client: %v", err)
     }
+
+    // Close client when done.
+    //defer client.Close()
+    return client, ctx, err
+}
+
+
+func getAll(ctx context.Context, client *firestore.Client) error {
+    fmt.Println("All cities:")
+    iter := client.Collection("accidents").Documents(ctx)
+    for {
+        doc, err := iter.Next()
+        if err == iterator.Done {
+            break
+        }
+        if err != nil {
+            return err
+        }
+        fmt.Println(doc.Data())
+    }
+    return nil
+}
+
+func addOne(one Incident, ctx context.Context, client *firestore.Client) error {
+
+    accLoc := latlng.LatLng {
+       Latitude: one.Latitude,
+       Longitude: one.Longitude,
+    }
+
+    _, _, err = client.Collection("accidents").Add(ctx, map[string]interface{}{
+            "speed": one.Speed,
+            "heading":  one.Heading,
+            "timestamp":  one.Timestamp,
+            "Location": &accLoc,
+    })
+
+    if err != nil {
+        // Handle any errors in an appropriate way, such as returning them.
+        log.Printf("An error has occurred: %s", err)
+    }
+
+    return nil
+}
+
+
+func termFireStoreClient(ctx context.Context, client *firestore.Client) {
+
+    client.Close()
 }
