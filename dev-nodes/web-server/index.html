@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+  <!-- Basic Page Needs
+  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+  <meta charset="utf-8">
+  <title>SpicyChicken: We're watching you....</title>
+  <meta name="description" content="">
+  <meta name="author" content="">
+
+  <!-- Mobile Specific Metas
+  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <!-- FONT
+  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+  <link href='http://fonts.googleapis.com/css?family=Raleway:400,300,600' rel='stylesheet' type='text/css'>
+
+  <!-- CSS
+  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+  <link rel="stylesheet" href="http://getskeleton.com/dist/css/normalize.css">
+  <link rel="stylesheet" href="http://getskeleton.com/dist/css/skeleton.css">
+  <link rel="stylesheet" href="http://getskeleton.com/examples/landing/css/custom.css">
+
+  <!-- Scripts
+  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+  <script src="http://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+
+  <!-- Favicon
+  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+  <link rel="icon" type="image/png" href="http://getskeleton.com/dist/images/favicon.png">
+
+</head>
+<body>
+<!-- Insert these scripts at the bottom of the HTML, but before you use any Firebase services -->
+
+  <!-- Firebase App (the core Firebase SDK) is always required and must be listed first -->
+  <script src="https://www.gstatic.com/firebasejs/7.9.3/firebase-app.js"></script>
+
+  <!-- If you enabled Analytics in your project, add the Firebase SDK for Analytics -->
+  <script src="https://www.gstatic.com/firebasejs/7.9.3/firebase-analytics.js"></script>
+
+  <!-- Add Firebase products that you want to use -->
+  <script src="https://www.gstatic.com/firebasejs/7.9.3/firebase-auth.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/7.9.3/firebase-firestore.js"></script>
+
+
+
+
+
+    <script>
+/**
+ * Firebase config block.
+ */
+var config = {
+  apiKey: "AIzaSyBTTDaDqsXn3RLT4UxrYuvJB9hZen7rgcA",
+  authDomain: "spicychicken-268718.firebaseapp.com",
+  databaseURL: "https://spicychicken-268718.firebaseio.com",
+  projectId: "spicychicken-268718",
+  storageBucket: "spicychicken-268718.appspot.com",
+  messagingSenderId: "134735987194",
+  appId: "1:134735987194:web:b85d185199991f3f51a443",
+  measurementId: "G-Y18XQ0E1QL"
+};
+
+firebase.initializeApp(config);
+
+var db = firebase.firestore();
+
+/*
+  Get all data from firestore
+*/
+var allAccidents = []; 
+
+async function getAccidents(){
+//  var accidents = [];
+  var snapshot = await db.collection('accidents').get();
+  await snapshot.docs.map(
+    async function(doc){
+      var loc = await doc.data().location
+      allAccidents.push(new google.maps.LatLng(loc.latitude, loc.longitude));
+    })
+  return
+//  return accidents;
+}
+
+
+/*
+ * Add the given location to firestore
+ */ 
+function reportAccident(data){
+
+  var loc = new firebase.firestore.GeoPoint(data.lat, data.lng);
+  db.collection("accidents").doc().set({
+      heading: 4,
+      speed: 20,
+      timestamp: Date.now()/1000,
+      location: loc,
+  })
+  .then(function() {
+      //console.log("Document successfully written!");
+  })
+  .catch(function(error) {
+      console.error("Error writing document: ", error);
+  });
+
+}
+
+/**
+* Starting point for running the program. Authenticates the user.
+* @param {function()} onAuthSuccess - Called when authentication succeeds.
+*/
+function initAuthentication(onAuthSuccess) {
+  firebase.auth().signInAnonymously().catch(function(error) {
+    console.log(error.code + ', ' + error.message);
+  }, {remember: 'sessionOnly'});
+
+  firebase.auth().onAuthStateChanged(function(user) {
+    if (user) {
+      data.sender = user.uid;
+      onAuthSuccess();
+    } else {
+      // User is signed out.
+      onAuthSuccess();
+    }
+  });
+}
+
+/**
+ * Creates a map object with a click listener and a heatmap.
+ */
+function initMap() {
+  allAccidents = new google.maps.MVCArray();
+  db.collection('accidents').onSnapshot(
+    async function(snap){
+      allAccidents.clear()
+      await snap.docs.forEach(function (doc){
+          //var data = doc.data()
+          var loc = doc.data().location
+          if( (typeof loc == "undefined") || (loc.latitude == undefined)){
+            //console.log("XXXXXXXXXXXXXX", doc.data());
+          } else{
+            allAccidents.push(new google.maps.LatLng(loc.latitude, loc.longitude));
+          }
+      });
+    });
+
+  var map = new google.maps.Map(document.getElementById('map'), {
+    center: {lat: 38.54069, lng: -121.751387},
+    zoom: 15,
+    styles: [{
+      featureType: 'poi',
+      stylers: [{ visibility: 'off' }]  // Turn off POI.
+    },
+    {
+      featureType: 'transit.station',
+      stylers: [{ visibility: 'off' }]  // Turn off bus, train stations etc.
+    }],
+    disableDoubleClickZoom: true,
+    streetViewControl: false,
+  });
+
+  // Listen for clicks and add the location of the click to firebase.
+  map.addListener('click', function(e) {
+    var data = {}
+    data.lat = e.latLng.lat();
+    data.lng = e.latLng.lng();
+    reportAccident(data);
+  });
+  
+  // Create a heatmap.
+  var heatmap = new google.maps.visualization.HeatmapLayer({
+    data: allAccidents,
+    map: map,
+    radius: 16
+  });
+  //initAuthentication(initFirebase.bind(undefined, heatmap));
+}
+
+/**
+ * Set up a Firebase with deletion on clicks older than expiryMs
+ * @param {!google.maps.visualization.HeatmapLayer} heatmap The heatmap to
+ */
+async function initFirebase(heatmap) {
+  blerg = heatmap
+  console.log("intfirebase")
+  // 10 minutes before current time.
+  var startTime = new Date().getTime() - (60 * 10 * 1000);
+
+  // Reference to the clicks in Firebase.
+  var clicks = await db.collection("accidents");
+
+  // Listen for clicks and add them to the heatmap.
+  //clicks.orderByChild('timestamp').startAt(startTime).on('child_added',
+  clicks.onSnapshot(
+    function(snapshot) {
+      // Get that click from firebase.
+      //var newPosition = snapshot.val();
+      snapshot.docs.map( function(doc){
+        //console.log("doc", doc.data());
+        var data = doc.data()
+        var point = new google.maps.LatLng(data.Location);
+        //blerg = data;
+        //console.log("new", data);
+        var elapsedMs = Date.now()/1000 - data.timestamp;
+
+        // Add the point to the heatmap.
+        heatmap.getData().push(point);
+      })
+      // Request entries older than expiry time (10 minutes).
+      var expiryMs = Math.max(60 * 10 * 1000 - elapsedMs, 0);
+
+      // Set client timeout to remove the point after a certain time.
+      window.setTimeout(function() {
+        // Delete the old point from the database.
+        snapshot.ref.remove();
+      }, expiryMs);
+    }
+  );
+}
+
+
+
+    </script>
+    <script async defer
+        src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDHoWXMSpawHVJCZeHMcsBKVK2iOP5yhic&libraries=visualization&callback=initMap">
+    </script>
+
+
+  <!-- Primary Page Layout
+  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+
+  <div class="section hero" style="background: radial-gradient(circle,#f66,#933); overflow: hidden;">
+    <div class="container">
+      <div class="row">
+        <div class="one-half column">
+          <div class="hero-heading"><span style="font-size: 5.0rem;">SpicyChicken</span> ❤️ you.<p/><h5>Automatically send notifications on accidents.</h5></div>
+        </div>
+        <div class="one-half column phones">
+          <img class="phone" src="./rooster.png" style="transform: scale(2,2);">
+          <img class="phone" src="./rooster.png" style="filter: blur(4px); opacity: .6; transform: scale(4,4); overflow: hidden;">
+        </div>
+      </div>
+    </div>
+  </div>
+
+   <div class="section values" style="padding: 10rem">
+    <div class="container">
+      <div class="row">
+        <div class="one-third column value">
+          <h2 class="value-multiplier">67%</h2>
+          <h5 class="value-heading">Purchase Increase</h5>
+          <p class="value-description">Percentage of users more likely to purchase on mobile friendly site.</p>
+        </div>
+        <div class="one-third column value">
+          <h2 class="value-multiplier">90%</h2>
+          <h5 class="value-heading">Multi-device Users</h5>
+          <p class="value-description">Most of the world accesses the internet on multiple devices.</p>
+        </div>
+        <div class="one-third column value">
+          <h2 class="value-multiplier">66%</h2>
+          <h5 class="value-heading">Sad Users</h5>
+          <p class="value-description">Percentage of users that are frustrated with page load times.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section get-help" style="padding: 5rem">
+    <div class="container">
+      <h3 class="section-heading">Live Map View</h3>
+    </div>
+  </div>
+
+  <div class="section categories" id="map" style="padding: 50rem">
+    <div class="container" ></div>
+  </div>
+
+  <div class="section get-help">
+    <div class="container">
+      <h3 class="section-heading">Need help getting started?</h3>
+      <p class="section-description">Skeleton is an amazingly easy place to start with responsive development. If you want to learn more, just visit the documentation!</p>
+      <a class="button button-primary" href="http://getskeleton.com">View Skeleton Docs</a>
+    </div>
+  </div>
+
+
+
+<!-- End Document
+  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+</body>
+</html>
