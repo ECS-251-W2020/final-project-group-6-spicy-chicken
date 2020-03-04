@@ -1,7 +1,6 @@
 package main
 
 import (
-  "fmt"
   "log"
 
   "golang.org/x/net/context"
@@ -33,10 +32,8 @@ func initFireStoreClient() (*firestore.Client, context.Context, error) {
 }
 
 func getAll(ctx context.Context, client *firestore.Client) ( []Incident, error) {
-    fmt.Println("All cities:")
 
     var incidents []Incident
-
 
     iter := client.Collection("accidents").Documents(ctx)
     for {
@@ -76,7 +73,7 @@ func addOne(one Incident, ctx context.Context, client *firestore.Client) error {
             "speed": one.Speed,
             "heading":  one.Heading,
             "timestamp":  one.Timestamp,
-            "Location": &accLoc,
+            "location": &accLoc,
     })
 
     if err != nil {
