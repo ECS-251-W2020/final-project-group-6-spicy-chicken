@@ -1,0 +1,47 @@
+@media (min-width: 1000px) {
+    span.company-name {
+        text-shadow: 1px 1px 5px #333;
+        font-size: 8.0rem;
+    }
+    p.footer-tag span {
+        font-size: 8em;
+        -webkit-text-fill-color: transparent;
+        -webkit-background-clip: text;
+    }
+    span.spicy {
+        background: -webkit-linear-gradient(#f00, #333);
+    }
+    span.chicken {
+        background: -webkit-linear-gradient(#f00, #333);
+    }
+    span.heart{
+        background: -webkit-linear-gradient(#f00, #333);
+    }
+    span.money{
+        -webkit-text-fill-color: #000 !important;
+        text-decoration-line: line-through;
+        opacity: .1;
+        background: -webkit-linear-gradient(#f00, #333);
+    }
+    span.you{
+        background: -webkit-linear-gradient(#f00, #333);
+    }
+    .hero-heading hr {
+        width: 100%;
+        border-top: 1px solid #633;
+    }
+    .tag-line{
+        text-shadow: 1px 1px 2px #fffa
+    }
+    
+    .phone {
+        margin: 10rem auto -12rem;
+    }
+    
+    #map{
+    
+        padding: 50rem;
+    }
+}
+
+
