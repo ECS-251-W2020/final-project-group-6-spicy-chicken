@@ -36,6 +36,8 @@ func Index(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
     fmt.Println(r.URL.Path)
     if strings.Contains(r.URL.Path, "png") {
         http.ServeFile(w, r, "./rooster.png")
+    } else if strings.Contains(r.URL.Path, "css") {
+        http.ServeFile(w, r, "./custom.css")
     } else {
         http.ServeFile(w, r, "./index.html")
     }
@@ -147,6 +149,7 @@ func main() {
 
     router.GET("/", Index)
     router.GET("/rooster.png", Index)
+    router.GET("/custom.css", Index)
     router.POST("/report", reportAccident)
     router.GET("/list", listAccident)
 
