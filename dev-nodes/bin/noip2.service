@@ -1,0 +1,11 @@
+[Unit]
+Description=noip2 service
+
+[Service]
+Type=forking
+ExecStart=/usr/local/bin/noip2 -c  /usr/local/etc/no-ip2.conf 
+Restart=always
+
+[Install]
+WantedBy=default.target
+
