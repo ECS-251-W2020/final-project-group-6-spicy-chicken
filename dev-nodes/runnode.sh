@@ -7,8 +7,8 @@ NODE_NAME=$1
 NODE_NAME=${NODE_NAME:-"node1"}
 DETACH_FLAG=${DETACH_FLAG:-"-d"}
 EXPOSE_FLAG=${EXPOSE_FLAG:-""}
-#CONTAINER_NAME="ethereum-$NODE_NAME"
-CONTAINER_NAME="$NODE_NAME"
+CONTAINER_NAME="spck-$NODE_NAME"
+#CONTAINER_NAME="$NODE_NAME"
 DATA_ROOT=${DATA_ROOT:-"$(pwd)/.ether-$NODE_NAME"}
 DATA_HASH=${DATA_HASH:-"$(pwd)/.ethash"}
 
@@ -23,8 +23,10 @@ if [[ ! -z $RPC_PORT ]]; then
     RPC_PORTMAP="-p $RPC_PORT:8545"
 fi
 
+
 if  [[ ! -z $EXPOSE_FLAG ]]; then
-    RPC_ARG='--ws --wsaddr=0.0.0.0 --wsport 8546 --wsapi=db,eth,net,web3,personal --wsorigins "*" --rpc --rpcaddr=0.0.0.0 --rpcport 8545 --rpcapi=db,eth,net,web3,personal,admin --rpccorsdomain "*"'
+    # if EXPOSE_FLAG is set
+    RPC_ARG='--ws --wsaddr=0.0.0.0 --wsport 8546 --wsapi=db,eth,net,web3,personal --wsorigins "*" --rpc --rpcaddr=0.0.0.0 --rpcport 8545 --rpcapi=db,eth,net,web3,personal,admin --rpccorsdomain "*" --syncmode full'
 fi
 
 BOOTNODE_URL=${BOOTNODE_URL:-$(./getbootnodeurl.sh)}

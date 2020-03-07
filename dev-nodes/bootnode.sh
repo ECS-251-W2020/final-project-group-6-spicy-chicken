@@ -2,8 +2,8 @@
 #
 # Runs a bootnode with ethereum official "alltools" image.
 #
-docker stop ethereum-bootnode
-docker rm ethereum-bootnode
+docker stop spck-bootnode
+docker rm spck-bootnode
 IMGNAME="ethereum/client-go:alltools-v1.8.12"
 DATA_ROOT=${DATA_ROOT:-$(pwd)}
 # generate bootnode key if needed
@@ -18,7 +18,7 @@ fi
 # creates ethereum network
 [ ! "$(docker network ls | grep ethereum)" ] && docker network create ethereum
 [[ -z $BOOTNODE_SERVICE ]] && BOOTNODE_SERVICE="127.0.0.1"
-docker run -d --name ethereum-bootnode \
+docker run -d --name spck-bootnode \
     -v $DATA_ROOT/.bootnode:/opt/bootnode \
     --network ethereum \
     $IMGNAME bootnode --nodekey /opt/bootnode/boot.key --verbosity=3 "$@"

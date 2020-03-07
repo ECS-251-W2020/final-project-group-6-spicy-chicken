@@ -1,3 +1,3 @@
 #!/bin/sh
-docker stop $(docker ps -q -f name=ethereum)
-docker rm $(docker ps -aq -f name=ethereum)
+docker stop $(docker ps -q -f name=spck)
+docker rm $(docker ps -aq -f name=spck)
