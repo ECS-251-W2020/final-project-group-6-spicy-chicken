@@ -46,6 +46,7 @@ func Index(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
 func reportAccident(w http.ResponseWriter, r *http.Request, params httprouter.Params) {
     //reportAccident requires accountId, geo lat, geo long
 
+    w.Header().Set("Access-Control-Allow-Origin", "*")
     err := r.ParseForm()
     if err != nil {
         panic(err)
