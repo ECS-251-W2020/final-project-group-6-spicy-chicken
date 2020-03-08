@@ -39,10 +39,12 @@
   background-size: cover;
   color: #fff;
   padding-bottom: 5rem;
+  background-blend-mode: color-dodge;
+  background-color: #000c;
 }
 .value-multiplier {
   margin-bottom: .5rem;
-  color: #11DFC7;
+  color: #e67f12;
 }
 .value-heading {
   margin-bottom: .3rem;
