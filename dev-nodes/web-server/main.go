@@ -108,6 +108,7 @@ func reportAccident(w http.ResponseWriter, r *http.Request, params httprouter.Pa
 func listAccident(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 
     w.Header().Set("Content-Type", "application/json")
+    w.Header().Set("Access-Control-Allow-Origin", "*")
     data, err := getAll(FSCTX, FSClient)
     if err != nil {
         printJsonError(w, r, 400, err.Error())
