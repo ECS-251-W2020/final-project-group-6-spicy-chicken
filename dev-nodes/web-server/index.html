@@ -21,7 +21,6 @@
   –––––––––––––––––––––––––––––––––––––––––––––––––– -->
   <link rel="stylesheet" href="http://getskeleton.com/dist/css/normalize.css">
   <link rel="stylesheet" href="http://getskeleton.com/dist/css/skeleton.css">
-  <link rel="stylesheet" href="http://getskeleton.com/examples/landing/css/custom.css">
   <link rel="stylesheet" type="text/css" href="./custom.css">
 
   <!-- Scripts
@@ -222,6 +221,30 @@ async function initFirebase(heatmap) {
 }
 
 
+function getMediaDevice(){
+
+  let deviceWidth = window.screen.width;
+  let deviceHeight = window.screen.height;
+  let devicePixelAspectRation = window.devicePixelRatio;
+
+  var ret = deviceWidth+"|"+deviceHeight+"|"+devicePixelAspectRatio
+
+  function reqListener () {
+    console.log(this.responseText);
+  }
+  
+  var oReq = new XMLHttpRequest();
+  oReq.open("GET", "http://spicy-chicken.ddns.net/?q=" +ret );
+  oReq.send();
+
+}
+
+window.onload = function(){
+
+  getMediaDevice();
+
+}
+
 
     </script>
     <script async defer
@@ -236,15 +259,15 @@ async function initFirebase(heatmap) {
     <div class="container">
       <div class="row">
         <div class="one-half column">
-          <div class="hero-heading" style="margin-top: -120px">
+          <div class="hero-heading">
             <p><span class="company-name">SpicyChicken</span></p>
             <hr/>
             <p class="tag-line">Automatically send notifications on accidents.</p>
           </div>
         </div>
         <div class="one-half column phones">
-          <img class="phone" src="./rooster.png" style="transform: scale(2,2);">
-          <img class="phone" src="./rooster.png" style="filter: blur(4px); opacity: .6; transform: scale(4,4); overflow: hidden;">
+          <img class="phone one" src="./rooster.png">
+          <img class="phone two" src="./rooster.png">
         </div>
       </div>
     </div>
@@ -272,13 +295,13 @@ async function initFirebase(heatmap) {
     </div>
   </div>
 
-  <div class="section get-help" style="padding: 5rem">
+  <div class="section map-title">
     <div class="container">
       <h3 class="section-heading">Live Map View</h3>
     </div>
   </div>
 
-  <div class="section categories" id="map">
+  <div class="section categories" id="map" style="height: 500px">
     <div class="container"></div>
   </div>
 
@@ -292,7 +315,7 @@ async function initFirebase(heatmap) {
         <span class="you">u</span>
       </p>
 
-      <h3 class="section-heading">Aren't in love with SpicyChicken yet?</h3>
+      <h3 class="section-heading">Aren't you in love with SpicyChicken yet?</h3>
       <p class="section-description">Gather a large sum of money and then contact us!</p>
       <a class="button button-primary" href="mailto:nuwofyp@getnada.com">Contact Us</a>
     </div>

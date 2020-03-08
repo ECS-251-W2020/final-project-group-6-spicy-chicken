@@ -1,47 +1,226 @@
-@media (min-width: 1000px) {
+
+
+/*------------------------*/
+* Shared
+* –––––––––––––––––––––––––––––––––––––––––––––––––– */
+.button {
+  border-radius: 100px;
+}
+
+/* Sections
+ * –––––––––––––––––––––––––––––––––––––––––––––––––– */
+.section {
+  padding: 8rem 0 7rem;
+  text-align: center;
+}
+.section-heading,
+.section-description {
+  margin-bottom: 1.2rem;
+}
+
+/* Hero
+ * –––––––––––––––––––––––––––––––––––––––––––––––––– */
+.phones {
+  position: relative;
+}
+.phone {
+  position: relative;
+  max-width: 80%;
+  margin: 3rem auto -12rem;
+}
+.phone .two {
+  display: none;
+}
+
+/* Values
+ * –––––––––––––––––––––––––––––––––––––––––––––––––– */
+.values {
+  background-image: url('http://getskeleton.com/examples/landing/images/values-bg.jpg');
+  background-size: cover;
+  color: #fff;
+  padding-bottom: 5rem;
+}
+.value-multiplier {
+  margin-bottom: .5rem;
+  color: #11DFC7;
+}
+.value-heading {
+  margin-bottom: .3rem;
+}
+.value-description {
+  opacity: .8;
+  font-weight: 300;
+}
+
+/* Help
+ * –––––––––––––––––––––––––––––––––––––––––––––––––– */
+.get-help {
+  border-bottom: 1px solid #ddd;
+}
+
+/* Categories
+ * –––––––––––––––––––––––––––––––––––––––––––––––––– */
+.categories {
+  background-image: url('../images/values-bg.jpg');
+  background-size: cover;
+  color: #fff;
+}
+.categories .section-description { 
+  margin-bottom: 4rem;
+}
+
+
+span.company-name {
+    text-shadow: 1px 1px 5px #333;
+}
+span.spicy {
+    background: -webkit-linear-gradient(#f00, #333);
+}
+span.chicken {
+    background: -webkit-linear-gradient(#f00, #333);
+}
+span.heart{
+    background: -webkit-linear-gradient(#f00, #333);
+}
+span.money{
+    -webkit-text-fill-color: #000 !important;
+    text-decoration-line: line-through;
+    opacity: .1;
+    background: -webkit-linear-gradient(#f00, #333);
+}
+span.you{
+    background: -webkit-linear-gradient(#f00, #333);
+}
+p.footer-tag span {
+    -webkit-text-fill-color: transparent;
+    -webkit-background-clip: text;
+}
+.hero-heading hr {
+    width: 100%;
+    border-top: 1px solid #633;
+}
+.tag-line{
+    text-shadow: 1px 1px 2px #fffa;
+}
+.map-heading{
+    padding: 5rem;
+}
+.get-help{
+    padding: 2rem;
+}
+.categories{
+    padding: 15rem;
+    height: 400px !important;
+}
+
+
+
+/* Larger than mobile */
+@media (min-width: 300px) {
+  .section {
+  }
+  .hero {
+    height: 500px;
+  }
+
+  .hero-heading hr {
+    width: 50%;
+    margin-top: 1.5rem;
+    margin-bottom: 1.5rem;
+  }
+  .hero-heading p {
+    margin-bottom: 0px;
+  }
+  .one {
+    margin-top: 7rem;
+  }
+  .two {
+    display: none;
+  }
+  .map-title{
+    padding: 3rem;
+  }
+  .get-help{
+    padding: 4rem;
+  }
+
+  span.company-name {
+    font-size: 4.5rem;
+ }
+}
+
+/* Larger than phablet (also point when grid becomes active) */
+@media (min-width: 400px) {
+  .two {
+    display: none;
+  }
+
     span.company-name {
-        text-shadow: 1px 1px 5px #333;
-        font-size: 8.0rem;
-    }
-    p.footer-tag span {
-        font-size: 8em;
-        -webkit-text-fill-color: transparent;
-        -webkit-background-clip: text;
-    }
-    span.spicy {
-        background: -webkit-linear-gradient(#f00, #333);
-    }
-    span.chicken {
-        background: -webkit-linear-gradient(#f00, #333);
-    }
-    span.heart{
-        background: -webkit-linear-gradient(#f00, #333);
-    }
-    span.money{
-        -webkit-text-fill-color: #000 !important;
-        text-decoration-line: line-through;
-        opacity: .1;
-        background: -webkit-linear-gradient(#f00, #333);
-    }
-    span.you{
-        background: -webkit-linear-gradient(#f00, #333);
-    }
-    .hero-heading hr {
-        width: 100%;
-        border-top: 1px solid #633;
-    }
-    .tag-line{
-        text-shadow: 1px 1px 2px #fffa
-    }
-    
-    .phone {
-        margin: 10rem auto -12rem;
-    }
-    
-    #map{
-    
-        padding: 50rem;
     }
 }
 
 
+/* Bigger than 1000 */
+@media (min-width: 1000px) {
+  .section .hero {
+    padding: 20rem 0 19rem;
+  }
+  .hero {
+    padding: 22rem 0;
+    background: radial-gradient(circle,#f66,#933);
+    overflow: hidden;
+    z-index: 1;
+    height: 320px;
+  }
+  .hero-heading {
+    font-size: 3.0rem;
+  }
+  .phone {
+    top: -8rem;
+    max-height: 615px;
+    margin: 10rem auto -12rem;
+    right: -5rem;
+  }
+  .one {
+    transform: scale(2,2);
+    z-index: 100;
+  }
+ .two {
+    transform: scale(4,4);
+    overflow: hidden;
+    filter: blur(4px);
+    opacity: 0.6;
+    z-index: 80;
+    display: block;
+    right: -10rem;
+    top: -30rem;
+
+  }
+  .hero-heading{
+      margin-top: -30px;
+  }  
+  span.company-name {
+      font-size: 8.0rem;
+  }
+  .tag-line {
+      font-size: 1em;
+  }
+  .map-title {
+    padding: 8rem;
+  }
+  p.footer-tag span {
+      -webkit-text-fill-color: transparent;
+      -webkit-background-clip: text;
+  }
+  #map{
+      padding: 50rem;
+  }
+}
+
+
+
+
+/* Larger than tablet */
+
+/* Larger than Desktop HD */
+@media (min-width: 1201px) {}
