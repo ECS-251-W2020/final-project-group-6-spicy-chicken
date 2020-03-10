@@ -149,6 +149,10 @@ p.footer-tag span {
   span.company-name {
     font-size: 4.5rem;
  }
+
+ .footer-tag{
+    font-size: 4rem;
+ }
 }
 
 /* Larger than phablet (also point when grid becomes active) */
@@ -209,6 +213,9 @@ p.footer-tag span {
   }
   .map-title {
     padding: 8rem;
+  }
+ .footer-tag{
+    font-size: 8rem;
   }
   p.footer-tag span {
       -webkit-text-fill-color: transparent;
