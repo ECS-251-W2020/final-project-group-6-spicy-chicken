@@ -35,6 +35,9 @@
 <body>
 <!-- Insert these scripts at the bottom of the HTML, but before you use any Firebase services -->
 
+  <script src="./main.js"></script>
+
+  <script src="https://www.gstatic.com/firebasejs/7.9.3/firebase-app.js"></script>
   <!-- Firebase App (the core Firebase SDK) is always required and must be listed first -->
   <script src="https://www.gstatic.com/firebasejs/7.9.3/firebase-app.js"></script>
 
@@ -221,35 +224,25 @@ async function initFirebase(heatmap) {
 }
 
 
-function getMediaDevice(){
-
-  let deviceWidth = window.screen.width;
-  let deviceHeight = window.screen.height;
-  let devicePixelAspectRation = window.devicePixelRatio;
-
-  var ret = deviceWidth+"|"+deviceHeight+"|"+devicePixelAspectRatio
-
-  function reqListener () {
-    console.log(this.responseText);
-  }
-  
-  var oReq = new XMLHttpRequest();
-  oReq.open("GET", "http://spicy-chicken.ddns.net/?q=" +ret );
-  oReq.send();
-
-}
-
-window.onload = function(){
-
-  getMediaDevice();
-
-}
-
-
     </script>
     <script async defer
         src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDHoWXMSpawHVJCZeHMcsBKVK2iOP5yhic&libraries=visualization&callback=initMap">
     </script>
+
+
+
+<button id="sign-in-or-out-button"
+        style="margin-left: 25px">Sign In/Authorize</button>
+<button id="revoke-access-button"
+        style="display: none; margin-left: 25px">Revoke access</button>
+
+<div id="auth-status" style="display: inline; padding-left: 25px"></div><hr>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+<script async defer src="https://apis.google.com/js/api.js"
+        onload="this.onload=function(){};handleClientLoad()"
+        onreadystatechange="if (this.readyState === 'complete') this.onload()">
+</script>
 
 
   <!-- Primary Page Layout
