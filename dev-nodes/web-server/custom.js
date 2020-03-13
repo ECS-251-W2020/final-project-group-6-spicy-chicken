@@ -9,7 +9,8 @@ function handleClientLoad() {
 function initClient() {
   // Retrieve the discovery document for version 3 of Google Drive API.
   // In practice, your app can retrieve one or more discovery documents.
-  var discoveryUrl = 'https://www.googleapis.com/discovery/v1/apis/drive/v3/rest';
+  var discoveryUrl = 'https://www.googleapis.com/discovery/v1/apis/people/v1/rest';
+    //'https://www.googleapis.com/discovery/v1/apis/drive/v3/rest',
 
   // Initialize the gapi.client object, which app uses to make API requests.
   // Get API key and client ID from API Console.
@@ -53,6 +54,21 @@ function isSignedIn(){
   }
 }
 
+/*
+ * Helper to get Username
+ */
+async function getUsername(){
+  var ret = null;
+  await gapi.client.people.people.get({
+    'resourceName': 'people/me',
+    'requestMask.includeField': 'person.names'
+  }).then(function(resp) {
+    ret = resp.result.names[0].displayName;
+  })
+
+  return ret;
+}
+
 function handleAuthClick() {
   if (GoogleAuth.isSignedIn.get()) {
     // User is authorized and has clicked "Sign out" button.
@@ -73,12 +89,18 @@ function setSigninStatus(isSignedIn) {
   if (isAuthorized) {
     $('#sign-in-or-out-button').html('Sign out');
     $('#revoke-access-button').css('display', 'inline-block');
-    $('#auth-status').html('You are currently signed in and can add locations'
-        + ' to map.');
+
+    var a = getUsername().then(function (rname){
+      var name = '<b>' + rname + '</b>'; 
+      $('#auth-status').html('Welcome ' + name + '! You can add ' + 
+          'locations to map.');
+    });
+    
+
   } else {
     $('#sign-in-or-out-button').html('Sign In');
     $('#revoke-access-button').css('display', 'none');
-    $('#auth-status').html('You have not singed it and cannot use the map.');
+    $('#auth-status').html('You have not signed it and cannot use the map.');
   }
 }
 
