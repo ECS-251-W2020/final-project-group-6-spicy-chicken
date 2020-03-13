@@ -3,6 +3,7 @@ package main
 import (
     "log"
     "fmt"
+    "time"
     "strconv"
     "strings"
 
@@ -35,10 +36,17 @@ var FSClient, FSCTX, err = initFireStoreClient();
 func Index(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
     fmt.Println(r.URL.Path)
     if strings.Contains(r.URL.Path, "png") {
+        fmt.Println("PNG", r.URL.Path)
         http.ServeFile(w, r, "./rooster.png")
+    } else if strings.Contains(r.URL.Path, "js") {
+        fmt.Println("XXX", r.URL.Path)
+        http.ServeFile(w, r, "./custom.js")
     } else if strings.Contains(r.URL.Path, "css") {
+        fmt.Println("CSS", r.URL.Path)
         http.ServeFile(w, r, "./custom.css")
+
     } else {
+        fmt.Println("IDX", r.URL.Path)
         http.ServeFile(w, r, "./index.html")
     }
 }
@@ -101,6 +109,8 @@ func reportAccident(w http.ResponseWriter, r *http.Request, params httprouter.Pa
     addOne(newIncident, FSCTX, FSClient)
     // Enter to Block chain
 
+    time.Sleep(4 * time.Second)
+
     w.Header().Set("Content-Type", "application/json")
     printJsonResponse(w, r, newIncident)
 
@@ -152,11 +162,16 @@ func main() {
     router.GET("/", Index)
     router.GET("/rooster.png", Index)
     router.GET("/custom.css", Index)
+    router.GET("/custom.js", Index)
     router.POST("/report", reportAccident)
     router.GET("/list", listAccident)
 
+    //initGeth();
+
     fmt.Println("Starting webserver....")
     log.Fatal(http.ListenAndServe(":80", router))
+
+
 
     defer termFireStoreClient(FSCTX, FSClient);
 }

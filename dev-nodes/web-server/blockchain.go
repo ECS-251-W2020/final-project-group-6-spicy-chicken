@@ -1,99 +1,231 @@
 package main
 
 import (
-   // "context"
-   // "crypto/ecdsa"
-   // "fmt"
-   // "log"
-   // "math/big"
-   "strings"
+    "context"
+    //"crypto/ecdsa"
+    "fmt"
+    "log"
+    "math/big"
 
-    "github.com/ethereum/go-ethereum/accounts/abi"
+    "github.com/ethereum/go-ethereum/accounts"
+    "github.com/ethereum/go-ethereum/accounts/keystore"
+
     "github.com/ethereum/go-ethereum/accounts/abi/bind"
     "github.com/ethereum/go-ethereum/common"
+    "github.com/ethereum/go-ethereum/ethclient"
+    "github.com/ethereum/go-ethereum/crypto"
 
-  //  "github.com/ethereum/go-ethereum/crypto"
-  //  "github.com/ethereum/go-ethereum/ethclient"
-
-   // store "../../contracts" 
-
+    incident "./build"
 )
+var GETH_NODE = "http://localhost:8545"
+var PRIVATE_KEY = "df505d175ae63abf209bad9dda965310d99559620551e74521a6798a41215f46"
+    // Please don't do something like this in production, okay?
+var ACCT_ADDR = "0x8cc5a1a0802db41db826c2fcb72423744338dcb0"
+var CONTRACT_ADDR = "0xbb85B721aaEdFeC6B47Ea2b7DbEcE57194481137" //"0x18f4ca4Fe0ABAaf2446a388F18BC119C3981762b"
+var KEYSTORE_DIR = "/home/uttie/final-project-group-6-spicy-chicken/dev-nodes/.ether-n1/keystore"
+var SIGN_PASSPHRASE = "pass"
 
-var contractABI = `[{"inputs":[],"stateMutability":"nonpayable","type":"constructor"},{"inputs":[{"internalType":"string","name":"alarmString","type":"string"},{"internalType":"uint256","name":"timestamp","type":"uint256"},{"internalType":"string","name":"lat","type":"string"},{"internalType":"string","name":"long","type":"string"}],"name":"alarm","outputs":[{"internalType":"int256","name":"result","type":"int256"}],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"uint256","name":"alarmId","type":"uint256"}],"name":"getAlarm","outputs":[{"internalType":"string","name":"accountId","type":"string"},{"internalType":"uint256","name":"timestamp","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"getOwnerAddress","outputs":[{"internalType":"address","name":"ownerAddress","type":"address"}],"stateMutability":"view","type":"function"}]`
+func initGeth() {
 
-var contractBin = `60806040523480156100115760006000fd5b505b6000600160005081909090555033600260006101000a81548173ffffffffffffffffffffffffffffffffffffffff021916908373ffffffffffffffffffffffffffffffffffffffff1602179055505b610067565b610620806100766000396000f3fe60806040523480156100115760006000fd5b50600436106100465760003560e01c806301b200351461004c5780630c4f65bd14610269578063bc1d1c99146102b357610046565b60006000fd5b610253600480360360808110156100635760006000fd5b81019080803590602001906401000000008111156100815760006000fd5b8201836020820111156100945760006000fd5b803590602001918460018302840111640100000000831117156100b75760006000fd5b91908080601f016020809104026020016040519081016040528093929190818152602001838380828437600081840152601f19601f8201169050808301925050505050505090909192909091929080359060200190929190803590602001906401000000008111156101295760006000fd5b82018360208201111561013c5760006000fd5b8035906020019184600183028401116401000000008311171561015f5760006000fd5b91908080601f016020809104026020016040519081016040528093929190818152602001838380828437600081840152601f19601f82011690508083019250505050505050909091929090919290803590602001906401000000008111156101c75760006000fd5b8201836020820111156101da5760006000fd5b803590602001918460018302840111640100000000831117156101fd5760006000fd5b91908080601f016020809104026020016040519081016040528093929190818152602001838380828437600081840152601f19601f82011690508083019250505050505050909091929090919290505050610363565b6040518082815260200191505060405180910390f35b610271610421565b604051808273ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff16815260200191505060405180910390f35b6102e0600480360360208110156102ca5760006000fd5b8101908080359060200190929190505050610450565b6040518080602001838152602001828103825284818151815260200191508051906020019080838360005b838110156103275780820151818401525b60208101905061030b565b50505050905090810190601f1680156103545780820380516001836020036101000a031916815260200191505b50935050505060405180910390f35b6000836000600050600060016000505481526020019081526020016000206000506000016000508190909055508260006000506000600160005054815260200190815260200160002060005060010160005090805190602001906103c892919061053a565b5081600060005060006001600050548152602001908152602001600020600050600201600050908051906020019061040192919061053a565b50600160008181505480929190600101919050909055505b949350505050565b6000600260009054906101000a900473ffffffffffffffffffffffffffffffffffffffff16905061044d565b90565b60606000600060005060008481526020019081526020016000206000506003016000508054600181600116156101000203166002900480601f0160208091040260200160405190810160405280929190818152602001828054600181600116156101000203166002900480156105075780601f106104dc57610100808354040283529160200191610507565b820191906000526020600020905b8154815290600101906020018083116104ea57829003601f168201915b5050505050915081506000600050600084815260200190815260200160002060005060000160005054905080505b915091565b828054600181600116156101000203166002900490600052602060002090601f016020900481019282601f1061057b57805160ff19168380011785556105ae565b828001600101855582156105ae579182015b828111156105ad578251826000509090559160200191906001019061058d565b5b5090506105bb91906105bf565b5090565b6105e791906105c9565b808211156105e357600081815060009055506001016105c9565b5090565b9056fea26469706673582212202526c6ffe8c4620baaf6071d84570da59a960bf44f548a661e88c559518b4b8664736f6c63430006030033`
+    fmt.Println("init geth");
 
+    ks := keystore.NewKeyStore(
+        KEYSTORE_DIR,
+        keystore.LightScryptN,
+        keystore.LightScryptP)
+    fmt.Println()
 
-var contractAddress= "0x3969509b5db6b786d0e0b12386405c0faee66414";
-
-//func doit() {
-//    client, err := ethclient.Dial("https://localhost:8545")
-//    if err != nil {
-//        log.Fatal(err)
-//    }
-//
-//    //privateKey, err := crypto.HexToECDSA("fad9c8855b740a0b7ed4c221dbad0f33a83a50cad6b3fe8d5817ac83d38b6a19")
-//    privateKey, err := crypto.HexToECDSA("df504d175ae63abf209bad9dda965310d99559620550e74521a6798a41215f46")
-//    if err != nil {
-//        log.Fatal(err)
-//    }
-//
-//    publicKey := privateKey.Public()
-//    publicKeyECDSA, ok := publicKey.(*ecdsa.PublicKey)
-//    if !ok {
-//        log.Fatal("error casting public key to ECDSA")
-//    }
-//
-//    fromAddress := crypto.PubkeyToAddress(*publicKeyECDSA)
-//    nonce, err := client.PendingNonceAt(context.Background(), fromAddress)
-//    if err != nil {
-//        log.Fatal(err)
-//    }
-//
-//    gasPrice, err := client.SuggestGasPrice(context.Background())
-//    if err != nil {
-//        log.Fatal(err)
-//    }
-//
-//    auth := bind.NewKeyedTransactor(privateKey)
-//    auth.Nonce = big.NewInt(int64(nonce))
-//    auth.Value = big.NewInt(0)     // in wei
-//    auth.GasLimit = uint64(300000) // in units
-//    auth.GasPrice = gasPrice
-//
-//    address := common.HexToAddress(contractAddress)
-//    instance, err := store.NewStore(address, client)
-//    if err != nil {
-//        log.Fatal(err)
-//    }
-//
-//    key := [32]byte{}
-//    value := [32]byte{}
-//    copy(key[:], []byte("foo"))
-//    copy(value[:], []byte("bar"))
-//
-//    tx, err := instance.SetItem(auth, key, value)
-//    if err != nil {
-//        log.Fatal(err)
-//    }
-//
-//    fmt.Printf("tx sent: %s", tx.Hash().Hex()) // tx sent: 0x8d490e535678e9a24360e955d75b27ad307bdfb97a1dca51d0f3035dcee3e870
-//
-//    result, err := instance.Items(&bind.CallOpts{}, key)
-//    if err != nil {
-//        log.Fatal(err)
-//    }
-//
-//    fmt.Println(string(result[:])) // "bar"
-//}
-
-
-func bindAlarmAccount(address common.Address, caller bind.ContractCaller, transactor bind.ContractTransactor) (*bind.BoundContract, error) {
-    parsed, err := abi.JSON(strings.NewReader(contractABI))
-    if err != nil {
-        return nil, err
+    // Create account definitions
+    fromAccDef := accounts.Account{
+        Address: common.HexToAddress(ACCT_ADDR),
     }
-    return bind.NewBoundContract(address, parsed, caller, transactor, nil), nil
+
+    // Find the signing account
+    signAcc, err := ks.Find(fromAccDef)
+    if err != nil {
+        fmt.Println("account keystore find error:")
+        panic(err)
+    }
+    fmt.Printf("account found: signAcc.addr=%s; signAcc.url=%s\n", signAcc.Address.String(), signAcc.URL)
+    fmt.Println()
+
+    // Unlock the signing account
+    errUnlock := ks.Unlock(signAcc, SIGN_PASSPHRASE)
+    if errUnlock != nil {
+        fmt.Println("account unlock error:")
+        panic(err)
+    }
+    fmt.Printf("account unlocked: signAcc.addr=%s; signAcc.url=%s\n", signAcc.Address.String(), signAcc.URL)
+
+    ctx := context.Background()
+
+    client, err := ethclient.Dial(GETH_NODE)
+    if err != nil {
+        log.Fatalf("could not connect to Ethereum gateway: %v\n", err)
+    }
+    defer client.Close()
+
+
+    privateKey, err := crypto.HexToECDSA(PRIVATE_KEY)
+    if err != nil {
+        log.Fatal("private key:", err)
+    }
+
+/*
+    publicKey := privateKey.Public()
+    publicKeyECDSA, ok := publicKey.(*ecdsa.PublicKey)
+    if !ok {
+        log.Fatal("cannot assert type: publicKey is not of type *ecdsa.PublicKey")
+    }
+
+    fromAddress := crypto.PubkeyToAddress(*publicKeyECDSA)
+    fmt.Println("from:", fromAddress);
+
+*/
+    fmt.Println("from2: %x", signAcc.Address);
+    nonce, err := client.PendingNonceAt(context.Background(), signAcc.Address)
+    if err != nil {
+        log.Fatal(err)
+    }
+
+    //accountAddress := fromAddress
+    //accountAddress := common.HexToAddress(signAcc.Address)
+    balance, err := client.BalanceAt(ctx, signAcc.Address, nil)
+    if err != nil {
+        log.Fatalf("unable to get balance: %v\n", err)
+    }
+    fmt.Printf("Balance: %d\n", balance)
+
+    gasPrice, err := client.SuggestGasPrice(context.Background())
+    if err != nil {
+        log.Fatal("GasPrice: ", err)
+    }
+
+    auth := bind.NewKeyedTransactor(privateKey)
+    auth.Nonce = big.NewInt(int64(nonce))
+    auth.Value = big.NewInt(0)     // in wei
+    ///auth.GasLimit = uint64(1000000) // in units
+    auth.GasLimit = uint64(1000000) // in units
+    auth.GasPrice = big.NewInt(1000000000000000000)
+
+    fmt.Println("GasPrice: ", gasPrice);
+
+    address := common.HexToAddress(CONTRACT_ADDR)
+    instance, err := incident.NewIncident(address, client)
+    if err != nil {
+        log.Fatal("new incident: ", err)
+    }
+    fmt.Println("inst:", instance);
+
+/*
+    key := [32]byte{}
+    value := [32]byte{}
+    copy(key[:], []byte("foo"))
+    copy(value[:], []byte("bar"))
+
+SetAccident(_id string, _lati string, _longi string, _speed string, _heading string, _timestamp string, _verified bool)
+*/
+
+    tx, err := instance.SetAccident(auth, "1234", "23", "24", "1", "N11", "2989324", true)
+    //tx, err := instance.GetAccident(auth, big.NewInt(3))
+    //tx, err := instance.SetAccident(auth, key, value)
+    if err != nil {
+        log.Fatal("setaccident: ", err)
+    }
+
+    fmt.Printf("tx sent: %s", tx.Hash().Hex()) // tx sent: 0x8d490e535678e9a24360e955d75b27ad307bdfb97a1dca51d0f3035dcee3e870
+
+/*
+    result, err := instance.Items(nil, key)
+    if err != nil {
+        log.Fatal(err)
+    }
+
+    fmt.Println(string(result[:])) // "bar"
+*/
+
+
+
+
+/*
+    auth := bind.NewKeyedTransactor(privateKey)
+    auth.Nonce = big.NewInt(int64(nonce))
+    auth.Value = big.NewInt(0)     // in wei
+    auth.GasLimit = uint64(300000) // in units
+    auth.GasPrice = gasPrice
+
+    input := "1.0"
+    address, tx, instance, err := incident.DeployIncident(auth, client, input)
+    if err != nil {
+        log.Fatal(err)
+    }
+
+    fmt.Println(address.Hex())   // 0x147B8eb97fD247D06C4006D269c90C1908Fb5D54
+    fmt.Println(tx.Hash().Hex()) // 0xdae8ba5444eefdc99f4d45cd0c4f24056cba6a02cefbf78066ef9f4188ff7dc0
+
+    _ = instance
+*/
 }
 
-func triggerAlarm(){}
+/*
+func main() {
+    client, err := ethclient.Dial(GETH_NODE)
+    if err != nil {
+        log.Fatal(err)
+    }
+
+    privateKey, err := crypto.HexToECDSA(PRIVATE_KEY)
+    if err != nil {
+        log.Fatal(err)
+    }
+
+    publicKey := privateKey.Public()
+    publicKeyECDSA, ok := publicKey.(*ecdsa.PublicKey)
+    if !ok {
+        log.Fatal("cannot assert type: publicKey is not of type *ecdsa.PublicKey")
+    }
+
+    fromAddress := crypto.PubkeyToAddress(*publicKeyECDSA)
+    nonce, err := client.PendingNonceAt(context.Background(), fromAddress)
+    if err != nil {
+        log.Fatal(err)
+    }
+
+    gasPrice, err := client.SuggestGasPrice(context.Background())
+    if err != nil {
+        log.Fatal(err)
+    }
+
+    auth := bind.NewKeyedTransactor(privateKey)
+    auth.Nonce = big.NewInt(int64(nonce))
+    auth.Value = big.NewInt(0)     // in wei
+    auth.GasLimit = uint64(300000) // in units
+    auth.GasPrice = gasPrice
+
+    address := common.HexToAddress("0x18f4ca4Fe0ABAaf2446a388F18BC119C3981762b")
+    instance, err := incident.NewIncident(address, client)
+    if err != nil {
+        log.Fatal(err)
+    }
+
+    key := [32]byte{}
+    value := [32]byte{}
+    copy(key[:], []byte("foo"))
+    copy(value[:], []byte("bar"))
+
+    tx, err := instance.SetItem(auth, key, value)
+    if err != nil {
+        log.Fatal(err)
+    }
+
+    fmt.Printf("tx sent: %s", tx.Hash().Hex()) // tx sent: 0x8d490e535678e9a24360e955d75b27ad307bdfb97a1dca51d0f3035dcee3e870
+
+    result, err := instance.Items(nil, key)
+    if err != nil {
+        log.Fatal(err)
+    }
+
+    fmt.Println(string(result[:])) // "bar"
+}
+*/
+
