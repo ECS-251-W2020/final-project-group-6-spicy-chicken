@@ -35,7 +35,7 @@
 <body>
 <!-- Insert these scripts at the bottom of the HTML, but before you use any Firebase services -->
 
-  <script src="./main.js"></script>
+  <script src="./custom.js"></script>
 
   <script src="https://www.gstatic.com/firebasejs/7.9.3/firebase-app.js"></script>
   <!-- Firebase App (the core Firebase SDK) is always required and must be listed first -->
@@ -48,11 +48,7 @@
   <script src="https://www.gstatic.com/firebasejs/7.9.3/firebase-auth.js"></script>
   <script src="https://www.gstatic.com/firebasejs/7.9.3/firebase-firestore.js"></script>
 
-
-
-
-
-    <script>
+  <script>
 /**
  * Firebase config block.
  */
@@ -94,19 +90,35 @@ async function getAccidents(){
  */ 
 function reportAccident(data){
 
-  var loc = new firebase.firestore.GeoPoint(data.lat, data.lng);
-  db.collection("accidents").doc().set({
-      heading: 4,
-      speed: 20,
-      timestamp: Date.now()/1000,
-      location: loc,
-  })
-  .then(function() {
-      //console.log("Document successfully written!");
-  })
-  .catch(function(error) {
-      console.error("Error writing document: ", error);
-  });
+  if (!isSignedIn()){
+    console.log("not signed in");
+    return false;
+  }
+
+  // Prep the XHR Object
+  var xhr = new XMLHttpRequest();
+  var url = '/report';
+  var params = {
+    authToken: 'null',
+    latitude: data.lat,
+    longitude: data.lng,
+    timestamp: Date.now(),
+    heading: 5,
+    speed: 30
+  }
+  xhr.open('POST', url, true);
+  
+  //Send the proper header information along with the request
+  xhr.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+  
+  xhr.onreadystatechange = function() {//Call a function when the state changes.
+      if(xhr.readyState == 4 && xhr.status == 200) {
+          //alert(xhr.responseText);
+      }
+  }
+  var paramstring = Object.keys(params).map(key => key + '=' + params[key]).join('&');
+  //console.log(paramstring);
+  xhr.send(paramstring);
 
 }
 
@@ -169,7 +181,7 @@ function initMap() {
     var data = {}
     data.lat = e.latLng.lat();
     data.lng = e.latLng.lng();
-    //reportAccident(data);
+    reportAccident(data);
   });
   
   // Create a heatmap.
@@ -222,26 +234,16 @@ async function initFirebase(heatmap) {
     }
   );
 }
-
-
     </script>
     <script async defer
         src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDHoWXMSpawHVJCZeHMcsBKVK2iOP5yhic&libraries=visualization&callback=initMap">
     </script>
 
 
-
-<button id="sign-in-or-out-button"
-        style="margin-left: 25px">Sign In/Authorize</button>
-<button id="revoke-access-button"
-        style="display: none; margin-left: 25px">Revoke access</button>
-
-<div id="auth-status" style="display: inline; padding-left: 25px"></div><hr>
-
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
 <script async defer src="https://apis.google.com/js/api.js"
         onload="this.onload=function(){};handleClientLoad()"
-        onreadystatechange="if (this.readyState === 'complete') this.onload()">
+        onreadystatechange="if (this.readyState === 'complete') this.onload()" >
 </script>
 
 
@@ -258,9 +260,9 @@ async function initFirebase(heatmap) {
             <p class="tag-line">Automatically send notifications on accidents.</p>
           </div>
         </div>
-        <div class="one-half column phones">
-          <img class="phone one" src="./rooster.png">
-          <img class="phone two" src="./rooster.png">
+        <div class="one-half column logos">
+          <img class="logo l-one" src="./rooster.png">
+          <img class="logo l-two" src="./rooster.png">
         </div>
       </div>
     </div>
@@ -288,9 +290,19 @@ async function initFirebase(heatmap) {
     </div>
   </div>
 
-  <div class="section map-title">
+  <div class="section map-section">
     <div class="container">
-      <h3 class="section-heading">Live Map View</h3>
+     <div class="row">
+      <div class="ten columns">
+        <h3 class="section-heading">Live Map View</h3> 
+        <div id="auth-status" class="row"></div>
+      </div>
+      <div class="two columns u-pull-right" name="auth">
+        <button id="sign-in-or-out-button" class="bg-green">Sign In</button>
+      </div>
+     </div>
+
+
     </div>
   </div>
 

@@ -20,22 +20,21 @@
 
 /* Hero
  * –––––––––––––––––––––––––––––––––––––––––––––––––– */
-.phones {
+.logos {
   position: relative;
 }
-.phone {
+.logo {
   position: relative;
   max-width: 80%;
   margin: 3rem auto -12rem;
 }
-.phone .two {
+.logo .l-two {
   display: none;
 }
 
 /* Values
  * –––––––––––––––––––––––––––––––––––––––––––––––––– */
 .values {
-  background-image: url('http://getskeleton.com/examples/landing/images/values-bg.jpg');
   background-size: cover;
   color: #fff;
   padding-bottom: 5rem;
@@ -63,7 +62,6 @@
 /* Categories
  * –––––––––––––––––––––––––––––––––––––––––––––––––– */
 .categories {
-  background-image: url('../images/values-bg.jpg');
   background-size: cover;
   color: #fff;
 }
@@ -115,6 +113,14 @@ p.footer-tag span {
     height: 400px !important;
 }
 
+.bg-red{
+    background-color: #f05e5e;
+    border-color: #333;
+}
+.bg-green{
+    background-color: #82fd82;
+    border-color: #333;
+}
 
 
 /* Larger than mobile */
@@ -133,14 +139,17 @@ p.footer-tag span {
   .hero-heading p {
     margin-bottom: 0px;
   }
-  .one {
+  .l-one {
     margin-top: 7rem;
   }
-  .two {
+  .l-two {
     display: none;
   }
-  .map-title{
-    padding: 3rem;
+  .map-section{
+    padding: 2rem;
+    /* Effectively copying skeletoncss u-full-width */
+    width: 100%;
+    box-sizing: border-box;
   }
   .get-help{
     padding: 4rem;
@@ -157,7 +166,7 @@ p.footer-tag span {
 
 /* Larger than phablet (also point when grid becomes active) */
 @media (min-width: 400px) {
-  .two {
+  .l-two {
     display: none;
   }
 
@@ -181,17 +190,17 @@ p.footer-tag span {
   .hero-heading {
     font-size: 3.0rem;
   }
-  .phone {
+  .logo {
     top: -8rem;
     max-height: 615px;
     margin: 10rem auto -12rem;
     right: -5rem;
   }
-  .one {
+  .l-one {
     transform: scale(2,2);
     z-index: 100;
   }
- .two {
+ .l-two {
     transform: scale(4,4);
     overflow: hidden;
     filter: blur(4px);
@@ -211,8 +220,8 @@ p.footer-tag span {
   .tag-line {
       font-size: 1em;
   }
-  .map-title {
-    padding: 8rem;
+  .map-section {
+    padding: 4rem;
   }
  .footer-tag{
     font-size: 8rem;
@@ -221,9 +230,14 @@ p.footer-tag span {
       -webkit-text-fill-color: transparent;
       -webkit-background-clip: text;
   }
+  .map-section #auth-status {
+    padding-bottom: 1rem;
+    text-shadow: 1px 1px rgb(10,0,0, 0.70);
+    color: #e67f12;
+  }
+
   #map{
       padding: 50rem;
-  }
 }
 
 
