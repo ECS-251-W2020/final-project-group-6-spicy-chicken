@@ -1,5 +1,8 @@
 #!/usr/bin/env bash
 
+# just cd otherwise dep scripts wont work
+cd ./private-eth
+
 # make genesis block
 ./genesis.sh
 
