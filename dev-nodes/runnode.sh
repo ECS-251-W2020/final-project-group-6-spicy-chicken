@@ -19,14 +19,14 @@ RPC_PORTMAP=
 RPC_ARG=
 if [[ ! -z $RPC_PORT ]]; then
 #    RPC_ARG='--ws --wsaddr=0.0.0.0 --wsport 8546 --wsapi=db,eth,net,web3,personal --wsorigins "*" --rpc --rpcaddr=0.0.0.0 --rpcport 8545 --rpcapi=db,eth,net,web3,personal --rpccorsdomain "*"'
-    RPC_ARG='--rpc --rpcaddr=0.0.0.0 --rpcport 8545 --rpcapi=db,eth,net,web3,personal --rpccorsdomain "*"'
+    RPC_ARG='--rpc --rpcaddr=0.0.0.0 --rpcport 8545 --rpcapi=db,eth,net,web3,personal --rpccorsdomain=* --rpcvhosts=*'
     RPC_PORTMAP="-p $RPC_PORT:8545"
 fi
 
 
 if  [[ ! -z $EXPOSE_FLAG ]]; then
     # if EXPOSE_FLAG is set
-    RPC_ARG='--ws --wsaddr=0.0.0.0 --wsport 8546 --wsapi=db,eth,net,web3,personal --wsorigins "*" --rpc --rpcaddr=0.0.0.0 --rpcport 8545 --rpcapi=db,eth,net,web3,personal,admin --rpccorsdomain "*" --syncmode full'
+    RPC_ARG='--ws --wsaddr=0.0.0.0 --wsport 8546 --wsapi=db,eth,net,web3,personal --wsorigins=* --rpc --rpcaddr=0.0.0.0 --rpcport 8545 --rpcapi=db,eth,net,web3,personal,admin --rpccorsdomain=* --rpcvhosts=* --syncmode=full' # --unlock=8cc5a1a0802db41db826c2fcb72423744338dcb0 --password="pass"'
 fi
 
 BOOTNODE_URL=${BOOTNODE_URL:-$(./getbootnodeurl.sh)}
