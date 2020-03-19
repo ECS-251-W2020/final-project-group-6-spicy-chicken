@@ -14,11 +14,13 @@ contracts/truffle/build/
 contracts/truffle/migrations/
 contracts/truffle/package-lock.json
 
+
 # app
 frontend/yarn.lock
 
 # webserver
 dev-nodes/web-server/web-server
+dev-nodes/web-server/build/
 dev-nodes/bin/*noip-2.1.9-1
 dev-nodes/.bootnode/
 dev-nodes/.ethash/
