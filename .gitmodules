@@ -1,0 +1,3 @@
+[submodule "dev-nodes/eth-net-intelligence-api"]
+	path = dev-nodes/eth-net-intelligence-api
+	url = https://github.com/cubedro/eth-net-intelligence-api
