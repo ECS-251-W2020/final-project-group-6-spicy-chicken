@@ -56,3 +56,5 @@ sudo apt-get install -y golang
 
 # config
 export GOPATH=$HOME/gocode
+export SPCK_PROJECT_PATH="${HOME}/spicy-chicken"
+export SPCK_DATA_ROOT="${SPCK_PROJECT_PATH}/eth-machines-data"

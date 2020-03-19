@@ -9,8 +9,11 @@ DETACH_FLAG=${DETACH_FLAG:-"-d"}
 EXPOSE_FLAG=${EXPOSE_FLAG:-""}
 CONTAINER_NAME="spck-$NODE_NAME"
 #CONTAINER_NAME="$NODE_NAME"
-DATA_ROOT=${DATA_ROOT:-"$(pwd)/.ether-$NODE_NAME"}
+DATA_ROOT=${SPCK_DATA_ROOT:-"$(pwd)/.ether-$NODE_NAME"}
 DATA_HASH=${DATA_HASH:-"$(pwd)/.ethash"}
+
+echo "$DATA_ROOT"
+exit 1
 
 echo "Destroying old container $CONTAINER_NAME..."
 docker stop $CONTAINER_NAME
