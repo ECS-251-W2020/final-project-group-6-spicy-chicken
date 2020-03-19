@@ -21,8 +21,8 @@ var GETH_NODE = "http://localhost:8545"
 var PRIVATE_KEY = "df505d175ae63abf209bad9dda965310d99559620551e74521a6798a41215f46"
     // Please don't do something like this in production, okay?
 var ACCT_ADDR = "0x8cc5a1a0802db41db826c2fcb72423744338dcb0"
-var CONTRACT_ADDR = "0xbb85B721aaEdFeC6B47Ea2b7DbEcE57194481137" //"0x18f4ca4Fe0ABAaf2446a388F18BC119C3981762b"
-var KEYSTORE_DIR = "/home/uttie/final-project-group-6-spicy-chicken/dev-nodes/.ether-n1/keystore"
+var CONTRACT_ADDR = "0xfd95cD79F634b82DDA6f57822D9CB855Aa4F9497" //"0xbb85B721aaEdFeC6B47Ea2b7DbEcE57194481137" //"0x18f4ca4Fe0ABAaf2446a388F18BC119C3981762b"
+var KEYSTORE_DIR = "/home/uttie/final-project-group-6-spicy-chicken/dev-nodes/.ether-spck-n1/keystore"
 var SIGN_PASSPHRASE = "pass"
 
 func initGeth() {
@@ -58,7 +58,7 @@ func initGeth() {
     fmt.Printf("account unlocked: signAcc.addr=%s; signAcc.url=%s\n", signAcc.Address.String(), signAcc.URL)
 
     ctx := context.Background()
-
+    _ = ctx;
     client, err := ethclient.Dial(GETH_NODE)
     if err != nil {
         log.Fatalf("could not connect to Ethereum gateway: %v\n", err)
@@ -87,28 +87,31 @@ func initGeth() {
     if err != nil {
         log.Fatal(err)
     }
+    fmt.Println(nonce);
 
     //accountAddress := fromAddress
     //accountAddress := common.HexToAddress(signAcc.Address)
+
     balance, err := client.BalanceAt(ctx, signAcc.Address, nil)
     if err != nil {
         log.Fatalf("unable to get balance: %v\n", err)
     }
     fmt.Printf("Balance: %d\n", balance)
-
+/*
     gasPrice, err := client.SuggestGasPrice(context.Background())
     if err != nil {
         log.Fatal("GasPrice: ", err)
     }
+*/
 
     auth := bind.NewKeyedTransactor(privateKey)
     auth.Nonce = big.NewInt(int64(nonce))
-    auth.Value = big.NewInt(0)     // in wei
-    ///auth.GasLimit = uint64(1000000) // in units
+    //auth.Value = big.NewInt(1000000)     // in wei
     auth.GasLimit = uint64(1000000) // in units
-    auth.GasPrice = big.NewInt(1000000000000000000)
+    //auth.GasLimit = uint64(300000) // in units
+    auth.GasPrice = big.NewInt(1000000)
 
-    fmt.Println("GasPrice: ", gasPrice);
+    //fmt.Println("GasPrice: ", gasPrice);
 
     address := common.HexToAddress(CONTRACT_ADDR)
     instance, err := incident.NewIncident(address, client)
@@ -127,7 +130,7 @@ SetAccident(_id string, _lati string, _longi string, _speed string, _heading str
 */
 
     tx, err := instance.SetAccident(auth, "1234", "23", "24", "1", "N11", "2989324", true)
-    //tx, err := instance.GetAccident(auth, big.NewInt(3))
+    //tx, err := instance.GetAccident(auth, big.NewInt(4))
     //tx, err := instance.SetAccident(auth, key, value)
     if err != nil {
         log.Fatal("setaccident: ", err)
