@@ -1,9 +1,18 @@
 #files
 *.sw?
+*package-lock.json
+
+contracts/truffle/build/
+dev-nodes/web-server/spicy*json
 
 # dirs
+*node_modules*
+#
 contracts/*.bin
 contracts/*.abi
+contracts/truffle/build/
+contracts/truffle/migrations/
+contracts/truffle/package-lock.json
 
 # app
 frontend/yarn.lock
