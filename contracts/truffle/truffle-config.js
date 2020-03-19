@@ -68,7 +68,8 @@ module.exports = {
         return web3;
       },*/
       //host: "127.0.0.1",
-      host: "172.18.0.6",
+      //host: "172.18.0.6",
+      host: "localhost",
       port: 8545,
       network_id: "*",
       gas: 1000000,
