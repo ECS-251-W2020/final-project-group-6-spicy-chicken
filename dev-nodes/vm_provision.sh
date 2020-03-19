@@ -53,6 +53,8 @@ cat ./bash_aliases >> ~/.bashrc
 # install more stuff
 sudo apt-get install -y golang
 
+# for eth-net-intelligence-api
+sudo yarn global add pm2
 
 # config
 export GOPATH=$HOME/gocode
