@@ -42,7 +42,7 @@ sudo npm install -f -g yarn
 sudo npm install -g expo-cli
 
 # install solc
-sudo npm install -g solc
+#sudo npm install -g solc
 
 # Auto complete for docker
 sudo curl -L https://raw.githubusercontent.com/docker/compose/1.25.3/contrib/completion/bash/docker-compose -o /etc/bash_completion.d/docker-compose
@@ -57,4 +57,12 @@ sudo apt-get install -y golang
 sudo yarn global add pm2
 
 # config
-export GOPATH=$HOME/gocode
+echo 'export GOPATH=$HOME/gocode' >> ~/.bashrc
+echo 'export SPCK_PROJECT_PATH="${HOME}/spicy-chicken"' >> ~/.bashrc
+echo 'export SPCK_DATA_ROOT="${SPCK_PROJECT_PATH}/eth-machines-data"' >> ~/.bashrc
+
+
+# install geth tools
+sudo add-apt-repository -y ppa:ethereum/ethereum
+sudo apt get update
+sudo apt install abigen solc
