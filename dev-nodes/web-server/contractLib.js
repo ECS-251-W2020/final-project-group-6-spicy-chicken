@@ -7,7 +7,7 @@ var argv = process.argv;
 var web3 = new Web3();
 
 
-var abi = fs.readFileSync("./web-server/build/Incident.abi")
+var abi = fs.readFileSync("./build/Incident.abi")
 web3.setProvider(new web3.providers.HttpProvider('http://localhost:8545'));
 console.log("setup-ed")
 
@@ -23,7 +23,7 @@ console.log("unlocked")
 /* accessor fns */
 function call_contract(id, lat, lng, speed, heading, ts, verified, resolve){
   var ret = '';
-  var a = contract.methods.setAccident(id, lat, lng, speed, heading, ts, 1).send({from: owner_account});
+  var a = contract.methods.setAccident(id, lat, lng, speed, heading, ts, 1).send({from: owner_account, gas: 1000000});
   a.then(function (e)
     {
       ret = e['transactionHash']; 
@@ -109,4 +109,8 @@ async function test_one(resolve) {
 
 
   return ret;
+}
+
+module.exports = {
+    call_contract: call_contract,
 }
