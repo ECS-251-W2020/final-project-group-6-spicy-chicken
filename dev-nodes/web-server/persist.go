@@ -92,11 +92,11 @@ func makeTimestamp() int64 {
 func timeit(id string, key string, ctx context.Context, client *firestore.Client) error {
 
     now := makeTimestamp();
-    _, _, err = client.Collection("timings").Add(ctx, map[string]interface{}{
-        "id": id,
-        "name": key,
-        "value": now,
-    })
+    //_, _, err = client.Collection("timings")a.Add(ctx, map[string]interface{}{
+	doc := client.Collection("timings").Doc(id)
+	_, err = doc.Set(ctx, map[string]interface{} {
+        key:now,
+    }, firestore.MergeAll)
 
     fmt.Printf("id: ", id, "name: ", key, "value: ", now);
 
