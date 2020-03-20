@@ -11,4 +11,9 @@ ADDR=`echo "console.log(Incident.address)" | truffle console --network dev| grep
 echo "wait til dag generation is done"
 echo $ADDR
 
+# compile go server
+cd "$PROJ_DIR/dev-nodes/web-server"
+go clean
+go build
 
+# start server
