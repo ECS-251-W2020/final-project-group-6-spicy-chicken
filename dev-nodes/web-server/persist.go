@@ -1,8 +1,9 @@
 package main
 
 import (
+  "fmt"
   "log"
-
+  "time"
   "golang.org/x/net/context"
   //firebase "firebase.google.com/go"
   //  "firebase.google.com/go/auth"
@@ -84,7 +85,28 @@ func addOne(one Incident, ctx context.Context, client *firestore.Client) error {
     return nil
 }
 
+func makeTimestamp() int64 {
+    return time.Now().UnixNano() / int64(time.Millisecond)
+}
 
+func timeit(id string, key string, ctx context.Context, client *firestore.Client) error {
+
+    now := makeTimestamp();
+    //_, _, err = client.Collection("timings")a.Add(ctx, map[string]interface{}{
+	doc := client.Collection("timings").Doc(id)
+	_, err = doc.Set(ctx, map[string]interface{} {
+        key:now,
+    }, firestore.MergeAll)
+
+    fmt.Printf("id: ", id, "name: ", key, "value: ", now);
+
+    if err != nil {
+        // Handle any errors in an appropriate way, such as returning them.
+        log.Printf("An error has occurred: %s", err)
+    }
+
+    return nil
+}
 func termFireStoreClient(ctx context.Context, client *firestore.Client) {
 
     client.Close()

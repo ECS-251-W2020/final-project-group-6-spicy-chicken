@@ -39,6 +39,23 @@
                #,                                                    
 
 
+# Code Layout
+* WIKI with dev guides (https://github.com/ECS-251-W2020/final-project-group-6-spicy-chicken/wiki)
+
+
+# Setup
+* `vm_provision.sh`:  originally intended as a vagrant script, will install  
+    all relevant dependancies and setup some environment variables for  
+    the programs to run.  
+
+* various eth scripts: These were intended to easily wrangle docker containers.  
+    The functionalities are self evident in their names.  
+    `make_ship_go.sh`: Shout out to Pakleds, because it "makes ship go!"
+
+
+#
+
+
 ### Don't fuck with this chicken!
 * [Trello Board](https://trello.com/b/ukfAJEwb/spicy-chicken)  
 * [Our Wiki](https://github.com/ECS-251-W2020/final-project-group-6-spicy-chicken/wiki)  

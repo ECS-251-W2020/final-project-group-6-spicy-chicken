@@ -3,7 +3,7 @@ package main
 import (
     "log"
     "fmt"
-    "time"
+    "os/exec"
     "strconv"
     "strings"
 
@@ -54,6 +54,7 @@ func Index(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
 func reportAccident(w http.ResponseWriter, r *http.Request, params httprouter.Params) {
     //reportAccident requires accountId, geo lat, geo long
 
+
     w.Header().Set("Access-Control-Allow-Origin", "*")
     err := r.ParseForm()
     if err != nil {
@@ -64,6 +65,8 @@ func reportAccident(w http.ResponseWriter, r *http.Request, params httprouter.Pa
     // Bail if account not found. XXX Do something smarter here
     authToken := r.Form.Get("authToken")
     _ = authToken
+
+    timeit(authToken, "serv_recv", FSCTX, FSClient);
 
     lat, err:= strconv.ParseFloat(r.Form.Get("latitude"), 32);
     if err != nil {
@@ -106,11 +109,26 @@ func reportAccident(w http.ResponseWriter, r *http.Request, params httprouter.Pa
     }
     fmt.Println(newIncident);
     //addAlarm(FSClient, newIncident);
-    addOne(newIncident, FSCTX, FSClient)
+    timeit(authToken, "geth_sbmt", FSCTX, FSClient);
+
     // Enter to Block chain
+    cmd := exec.Command("./report.js",
+        r.Form.Get("authToken"),
+        r.Form.Get("latitude"),
+        r.Form.Get("longitude"),
+        r.Form.Get("speed"),
+        r.Form.Get("heading"),
+        r.Form.Get("timestamp"));
 
-    time.Sleep(4 * time.Second)
+	err = cmd.Run()
+	if err != nil {
+		log.Fatal(err)
+	}
+    timeit(authToken, "geth_done", FSCTX, FSClient);
 
+    addOne(newIncident, FSCTX, FSClient)
+
+    timeit(authToken, "serv_resp", FSCTX, FSClient);
     w.Header().Set("Content-Type", "application/json")
     printJsonResponse(w, r, newIncident)
 

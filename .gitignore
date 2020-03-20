@@ -1,15 +1,25 @@
 #files
 *.sw?
+*package-lock.json
+
+contracts/truffle/build/
+dev-nodes/web-server/spicy*json
 
 # dirs
+*node_modules*
+#
 contracts/*.bin
 contracts/*.abi
+contracts/truffle/build/
+contracts/truffle/package-lock.json
+
 
 # app
 frontend/yarn.lock
 
 # webserver
 dev-nodes/web-server/web-server
+dev-nodes/web-server/build/
 dev-nodes/bin/*noip-2.1.9-1
 dev-nodes/.bootnode/
 dev-nodes/.ethash/

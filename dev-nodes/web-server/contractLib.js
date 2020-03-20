@@ -7,7 +7,7 @@ var argv = process.argv;
 var web3 = new Web3();
 
 
-var abi = fs.readFileSync("./web-server/build/Incident.abi")
+var abi = fs.readFileSync("./build/Incident.abi")
 web3.setProvider(new web3.providers.HttpProvider('http://localhost:8545'));
 console.log("setup-ed")
 
@@ -15,7 +15,7 @@ console.log("setup-ed")
 /* load and unlock contract */
 var owner_account = "0x8cc5a1a0802db41db826c2fcb72423744338dcb0"
 web3.eth.personal.unlockAccount(owner_account, "pass", 100000);
-var contract_address = "0xbb85B721aaEdFeC6B47Ea2b7DbEcE57194481137"
+var contract_address = '0x0304EFE49985eE4B21b271c25d24d4c4FaFcB816';
 //var contract_address = "0xfd95cD79F634b82DDA6f57822D9CB855Aa4F9497"
 var contract = new web3.eth.Contract(JSON.parse(abi), contract_address)
 console.log("unlocked")
@@ -23,7 +23,7 @@ console.log("unlocked")
 /* accessor fns */
 function call_contract(id, lat, lng, speed, heading, ts, verified, resolve){
   var ret = '';
-  var a = contract.methods.setAccident(id, lat, lng, speed, heading, ts, 1).send({from: owner_account});
+  var a = contract.methods.setAccident(id, lat, lng, speed, heading, ts, 1).send({from: owner_account, gas: 1000000});
   a.then(function (e)
     {
       ret = e['transactionHash']; 
@@ -109,4 +109,8 @@ async function test_one(resolve) {
 
 
   return ret;
+}
+
+module.exports = {
+    call_contract: call_contract,
 }
