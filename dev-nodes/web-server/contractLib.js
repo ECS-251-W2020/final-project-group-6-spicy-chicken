@@ -15,10 +15,10 @@ console.log("setup-ed")
 /* load and unlock contract */
 var owner_account = "0x8cc5a1a0802db41db826c2fcb72423744338dcb0"
 web3.eth.personal.unlockAccount(owner_account, "pass", 100000);
-var contract_address = '0x0304EFE49985eE4B21b271c25d24d4c4FaFcB816';
+var contract_address = process.env.CONTRACT_ADDR;
 //var contract_address = "0xfd95cD79F634b82DDA6f57822D9CB855Aa4F9497"
 var contract = new web3.eth.Contract(JSON.parse(abi), contract_address)
-console.log("unlocked")
+console.log("unlocked. contract addr:", contract_address)
 
 /* accessor fns */
 function call_contract(id, lat, lng, speed, heading, ts, verified, resolve){

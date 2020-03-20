@@ -1,6 +1,6 @@
 #!/usr/bin/env nodejs
 
-const cl = require("/home/uttie/spicy-chicken/dev-nodes/web-server/contractLib.js");
+const cl = require("/home/uttie/spicy-chicken-repo/dev-nodes/web-server/contractLib.js");
 
 var args = process.argv;
 if (process.argv.length != 8){
