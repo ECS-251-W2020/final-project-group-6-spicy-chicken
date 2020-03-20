@@ -10,3 +10,5 @@ ADDR=`echo "console.log(Incident.address)" | truffle console --network dev| grep
 
 echo "wait til dag generation is done"
 echo $ADDR
+
+
