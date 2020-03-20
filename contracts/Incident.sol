@@ -15,13 +15,13 @@ contract Incident{
 
     int public i;
     function setAccident(
-    	string memory _id,
-    	string memory _lati,
-    	string memory _longi,
-    	string memory _speed,
-	string memory _heading, 
-    	string memory _timestamp,
-    	bool _verified) public {
+        string memory _id,
+        string memory _lati,
+        string memory _longi,
+        string memory _speed,
+        string memory _heading, 
+        string memory _timestamp,
+        bool _verified) public {
 
         i+=1;
         accidents[i].id        =  _id;
@@ -34,21 +34,21 @@ contract Incident{
     }
 
     function getAccident(int  i) view public returns (
-	string memory _id,
-     	string memory _lati,
-     	string memory _longi,
-     	string memory _speed,
-	string memory _heading,
-	string memory _timestamp,
-    	bool _verified) {
+        string memory _id,
+        string memory _lati,
+        string memory _longi,
+        string memory _speed,
+        string memory _heading,
+        string memory _timestamp,
+        bool _verified) {
 
-	return (
-		accidents[i].id,
-         	accidents[i].latitude,
-         	accidents[i].longtide,
-         	accidents[i].speed,
-         	accidents[i].heading,
-         	accidents[i].timestamp,
-         	accidents[i].verified);
+    return (
+        accidents[i].id,
+        accidents[i].latitude,
+        accidents[i].longtide,
+        accidents[i].speed,
+        accidents[i].heading,
+        accidents[i].timestamp,
+        accidents[i].verified);
    }
 }
