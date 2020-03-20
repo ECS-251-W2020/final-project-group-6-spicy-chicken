@@ -60,14 +60,16 @@ sudo yarn global add pm2
 echo 'export GOPATH=$HOME/gocode' >> ~/.bashrc
 echo 'export SPCK_PROJECT_PATH="${HOME}/spicy-chicken"' >> ~/.bashrc
 echo 'export SPCK_DATA_ROOT="${SPCK_PROJECT_PATH}/eth-machines-data"' >> ~/.bashrc
+echo 'export NODE_PATH="${SPCK_PROJECT_PATH}/node-lib-path"' >> ~/.bashrc
 
 
 # install geth tools
 sudo add-apt-repository -y ppa:ethereum/ethereum
 sudo apt get update
-sudo apt install abigen solc parallel
+sudo apt install abigen solc parallel jq
 
 # do truffle setup
+sudo npm -g install firebase-admin
 #npm install truffle-hdwallet-provider
 
 
