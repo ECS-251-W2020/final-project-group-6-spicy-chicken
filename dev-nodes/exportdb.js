@@ -1,6 +1,6 @@
 const admin = require('firebase-admin');
 
-var serviceAccount = require("/home/uttie/spicy-chicken/dev-nodes/web-server/spicychicken-268718-firebase-adminsdk-h1qb3-bd9c136e52.json");
+var serviceAccount = require(process.env.SPCK_PROJECT_PATH + "/dev-nodes/web-server/spicychicken-268718-firebase-adminsdk-h1qb3-bd9c136e52.json");
 
 admin.initializeApp({
   credential: admin.credential.cert(serviceAccount)
