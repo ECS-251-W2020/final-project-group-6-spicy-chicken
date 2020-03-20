@@ -112,18 +112,20 @@ func reportAccident(w http.ResponseWriter, r *http.Request, params httprouter.Pa
     timeit(authToken, "geth_sbmt", FSCTX, FSClient);
 
     // Enter to Block chain
-    cmd := exec.Command("./report.js",
+    //out, err := exec.Command("./report.js",
+    out, err := exec.Command("nodejs", "./report.js", "8r0yS95tTFqsatdC1g", "38.54212129001108", "-121.74396376278763", "5", "-4", "1584658754").CombinedOutput()
+    fmt.Println("./report.js",
         r.Form.Get("authToken"),
         r.Form.Get("latitude"),
         r.Form.Get("longitude"),
         r.Form.Get("speed"),
         r.Form.Get("heading"),
-        r.Form.Get("timestamp"));
+        r.Form.Get("timestamp"))
 
-	err = cmd.Run()
-	if err != nil {
-		log.Fatal(err)
-	}
+    fmt.Printf(">>> %v\n ERR:>>> %v", out, err);
+    if err != nil {
+        log.Fatal(err)
+    }
     timeit(authToken, "geth_done", FSCTX, FSClient);
 
     addOne(newIncident, FSCTX, FSClient)
