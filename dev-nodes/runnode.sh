@@ -53,6 +53,7 @@ docker run $DETACH_FLAG --name $CONTAINER_NAME \
     -v $DATA_HASH:/root/.ethash \
     -v $(pwd)/genesis.json:/opt/genesis.json \
     -v $(pwd)/pass:/opt/pass \
+    -v $(pwd)/src/UTC--2020-03-06T23-15-36.166980927Z--8cc5a1a0802db41db826c2fcb72423744338dcb0:/root/.etherum/keystore/UTC--2020-03-06T23-15-36.166980927Z--8cc5a1a0802db41db826c2fcb72423744338dcb0 \
     $RPC_PORTMAP \
     $IMGNAME ${@:2} --bootnodes=$BOOTNODE_URL $RPC_ARG --cache=512 --verbosity=4 --maxpeers=3 
 
