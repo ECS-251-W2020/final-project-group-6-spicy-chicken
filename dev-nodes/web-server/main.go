@@ -1,6 +1,7 @@
 package main
 
 import (
+    "os"
     "log"
     "fmt"
     "os/exec"
@@ -108,19 +109,29 @@ func reportAccident(w http.ResponseWriter, r *http.Request, params httprouter.Pa
         Verified: false,
     }
     fmt.Println(newIncident);
-    //addAlarm(FSClient, newIncident);
     timeit(authToken, "geth_sbmt", FSCTX, FSClient);
 
     // Enter to Block chain
     //out, err := exec.Command("./report.js",
-    out, err := exec.Command("nodejs", "./report.js", "8r0yS95tTFqsatdC1g", "38.54212129001108", "-121.74396376278763", "5", "-4", "1584658754").CombinedOutput()
-    fmt.Println("./report.js",
+    //fmt.Println("XXXX: ", os.Getenv("CONTRACT_ADDR"), os.Getenv("SPCK_PROJECT_PATH"));
+    cmd := exec.Command("nodejs", "./report.js", "8r0yS95tTFqsatdC1g", "38.54212129001108", "-121.74396376278763", "5", "-4", "1584658754")
+    cmd.Env = append(os.Environ(),
+                "NODE_PATH=/home/uttie/spicy-chicken-repo/contracts/truffle/node_modules/",
+            )
+
+    out, err := cmd.CombinedOutput()
+    if err != nil {
+        fmt.Println(out);
+        log.Fatal(err)
+    }
+
+    /*fmt.Println("./report.js",
         r.Form.Get("authToken"),
         r.Form.Get("latitude"),
         r.Form.Get("longitude"),
         r.Form.Get("speed"),
         r.Form.Get("heading"),
-        r.Form.Get("timestamp"))
+        r.Form.Get("timestamp")) */
 
     fmt.Printf(">>> %v\n ERR:>>> %v", out, err);
     if err != nil {
