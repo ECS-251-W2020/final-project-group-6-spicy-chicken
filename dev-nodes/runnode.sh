@@ -26,7 +26,7 @@ fi
 
 if  [[ ! -z $EXPOSE_FLAG ]]; then
     # if EXPOSE_FLAG is set
-    RPC_ARG='--ws --wsaddr=0.0.0.0 --wsport 8546 --wsapi=db,eth,net,web3,personal --wsorigins=* --rpc --rpcaddr=0.0.0.0 --rpcport 8545 --rpcapi=db,eth,net,web3,personal,admin --rpccorsdomain=* --rpcvhosts=* --syncmode=full' # --unlock=8cc5a1a0802db41db826c2fcb72423744338dcb0 --password="pass"'
+    RPC_ARG="--ws --wsaddr=0.0.0.0 --wsport 8546 --wsapi=db,eth,net,web3,personal --wsorigins=* --rpc --rpcaddr=0.0.0.0 --rpcport 8545 --rpcapi=db,eth,net,web3,personal,admin --rpccorsdomain=* --rpcvhosts=* --syncmode=full --unlock 8cc5a1a0802db41db826c2fcb72423744338dcb0 --password /opt/pass"
 fi
 
 BOOTNODE_URL=${BOOTNODE_URL:-$(./getbootnodeurl.sh)}
@@ -39,6 +39,7 @@ if [ ! -d $DATA_ROOT/keystore ]; then
     docker run --rm \
         -v $DATA_ROOT:/root/.ethereum \
         -v $(pwd)/genesis.json:/opt/genesis.json \
+        -v $(pwd)/pass:/opt/pass \
         $IMGNAME init /opt/genesis.json
     echo "...done!"
 fi
@@ -51,6 +52,7 @@ docker run $DETACH_FLAG --name $CONTAINER_NAME \
     -v $DATA_ROOT:/root/.ethereum \
     -v $DATA_HASH:/root/.ethash \
     -v $(pwd)/genesis.json:/opt/genesis.json \
+    -v $(pwd)/pass:/opt/pass \
     $RPC_PORTMAP \
     $IMGNAME ${@:2} --bootnodes=$BOOTNODE_URL $RPC_ARG --cache=512 --verbosity=4 --maxpeers=3 
 
