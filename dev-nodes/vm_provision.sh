@@ -65,4 +65,12 @@ echo 'export SPCK_DATA_ROOT="${SPCK_PROJECT_PATH}/eth-machines-data"' >> ~/.bash
 # install geth tools
 sudo add-apt-repository -y ppa:ethereum/ethereum
 sudo apt get update
-sudo apt install abigen solc
+sudo apt install abigen solc parallel
+
+# do truffle setup
+#npm install truffle-hdwallet-provider
+
+
+# do deploy
+
+

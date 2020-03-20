@@ -5,7 +5,7 @@
 docker stop spck-bootnode
 docker rm spck-bootnode
 IMGNAME="ethereum/client-go:alltools-v1.8.12"
-DATA_ROOT=${DATA_ROOT:-$(pwd)}
+DATA_ROOT=${SPCK_DATA_ROOT:-$(pwd)}
 # generate bootnode key if needed
 mkdir -p $DATA_ROOT/.bootnode
 if [ ! -f $DATA_ROOT/.bootnode/boot.key ]; then
